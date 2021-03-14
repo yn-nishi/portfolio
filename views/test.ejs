@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <style>
+    #msgs > li:nth-child(odd) { background: #eee; }
+    </style>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title  %></h1>
+    <p>Welcome to <%= title %> by test.ejs!</p>
+    <input type="text" id="inp">
+    <input type="submit" id="sbm" value="エミッツ">
+    <ul id="msgs"></ul> 
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      const $inp = document.getElementById('inp');
+      const $smgs = document.getElementById('msgs');
+      document.getElementById('sbm').onclick = () => {
+        const formData = {
+          'comment' : $inp.value
+        };
+        fetch('/test/emit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+        socket.emit("c2s", $inp.value);
+      }
+      socket.on("s2c", (arg) => {
+        console.log(arg);
+        const $li = document.createElement('li');
+        $li.textContent = arg;
+        $smgs.appendChild($li);
+      });
+    </script>
+  </body>
+</html>
