@@ -1,9 +1,19 @@
 var express = require('express');
 var router = express.Router();
+const db = require('../lib/db');
 
-router.get('/', (req, res, next) => {
-  res.render('template', {
-
-  });
+router.get ('/', async (req, res) => {
+  const ss = req.session;
+  let q = '';
+  q = 'SELECT * FROM Chat ORDER BY posted_at DESC';
+  const chatLog = await db.many(q);
+    res.render('template', {
+      myId: ss.id,
+      myName: ss.myName,
+      myIcon: ss.myIcon,
+      chatData: chatLog
+    });
 });
+
+
 module.exports = router;

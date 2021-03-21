@@ -11,6 +11,8 @@
   <body>
     <h1><%= title  %></h1>
     <p>Welcome to <%= title %> by test.ejs!</p>
+    <p>your sid is <%= ss %> </p>
+    <p>your snmae is <%= sname %> </p>
     <input type="text" id="inp">
     <input type="submit" id="sbm" value="エミッツ">
     <ul id="msgs"></ul> 
@@ -22,16 +24,37 @@
       const $smgs = document.getElementById('msgs');
       document.getElementById('sbm').onclick = () => {
         const formData = {
-          'comment' : $inp.value
+          'msg' : $inp.value
         };
-        fetch('/test/emit', {
+        fetch('/emit', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
+          credentials: 'same-origin',
           body: JSON.stringify(formData)
         })
-        socket.emit("c2s", $inp.value);
+        .then(data => data.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.error('Error:', err);
+        });
+
+
+        // .then((res) => {
+        //   console.log(res);
+        //   return res
+        // }).then(function(data){
+        //   console.log(data);
+        // })
+        // .catch(function(data) {
+        //   console.log('catch',data)
+        // //   console.log('a',res);
+        // //   socket.emit("c2s", $inp.value);
+        // });
+        
       }
       socket.on("s2c", (arg) => {
         console.log(arg);

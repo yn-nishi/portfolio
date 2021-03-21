@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
     session.visitCount = 1;
   }
   session.msg = `こんちは、${session.visitCount}回目の訪問だよ<br>おあなたのID${session.id}`;
-  
+  console.log(req.session);
   res.render('index', {
     title: 'Express!!',
     visitCount: session.visitCount,

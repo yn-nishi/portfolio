@@ -15,19 +15,52 @@ const pool = new Pool({
 router.get('/', (req, res, next) => {
 
 
-  // pool.query('SELECT * FROM users ORDER BY id ASC', (pgError, pgData) => {
-  //   if (pgError) {
-  //     throw pgError
-  //   }
+  if(!req.session.name) {
+    req.session.name = 'テスト太郎';
+  }
     res.render('test', {
       // title: pgData.rows[2].name + ' | ' + pgData.rows[2].email
-      title: 'pgData.rows'
+      title: 'pgData.rows',
+      ss: req.session.id,
+      sname: req.session.name
     });
   // });
 });
 
-router.post('/emit', (req, res, next) => {
+router.use('/emit', (req, res, next) => {
+  //write on DB
 
-  console.log(req.body);
+  // pool.query(`INSERT INTO Chat (sid, chat_name, chat_msg, posted_at) VALUES ($1, $2, $3, DEFAULT)`, [sid ](pgErr, pgRes) => {
+  //   if (pgErr) {
+  //     throw pgErr;
+  //   }
+  // });
+
+  res.send({
+    aaaaa: 'thanks!!!',
+    sid: req.session.id,
+    body: req.body
+  });
+
+  // next();
+
+}, (req, res) => {
+  // get from DB & emit to client
+  pool.query('SELECT * FROM Chat', (pgErr, pgRes) => {
+    if (pgErr) {
+      throw pgErr;
+    }
+    console.log(pgRes.rows);
+  });
+  // res.render('test', {
+  //   title: 'pgData.rows',
+  //   ss: req.session.id,
+  //   sname: req.session.name
+  // });
+
+  res.send({aaaaa:'thanks!!!', sid:req.session.id});
+
+  // console.log(req.session.id, req.session.name);
+  // console.log(req.body);
 })
 module.exports = router;

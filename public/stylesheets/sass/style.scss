@@ -1,10 +1,18 @@
+
+@function p2r($size) {  
+  @return ($size / 16) + rem;
+}
+
 .ly_header {
   background-color: lightgreen;
-  padding: 0.3125rem 1.25rem;
+  // margin-top: 0;
+  padding: p2r(5) p2r(20);
   display: flex;
 }
 
+
 .bl_logo > img {
+  // display: block;
   width: 100px;
 }
 
@@ -15,8 +23,9 @@
 }
 
 .el_chatInput_myIcon {
-  width: 2.5rem;
-  height: 2.5rem;
+  // transform: scale(-1,1);
+  width: p2r(40);
+  height: p2r(40);
 }
 
 .bl_pocket {
@@ -33,15 +42,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.bl_basket > img {
-  width: 3em;
-}
-.bl_basket > span {
-  position: absolute;
-  top: 20%;
-  left: 60%;
-  transform: translate(-50%, -50%);
+  & > img {
+    width: 3em;
+  }
+  & > span {
+    position: absolute;
+    top: 20%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .ly_main {
@@ -50,18 +59,18 @@
 
 .ly_section {
   background-color: #ffd8f9;
-  margin-top: 1.875rem;
+  margin-top: p2r(30);
 }
 
 .el_h2 {
-  margin-top: 0.625rem;
+  margin-top: p2r(10);
 }
 
 .bl_mediaUnit {
-  margin-top: 0.625rem;
-}
-.bl_mediaUnit2 {
-  display: flex;
+  margin-top: p2r(10);
+  &2 {
+    display: flex;
+  }
 }
 
 .bl_media {
@@ -72,26 +81,31 @@
 
 .bl_chatView {
   background-color: lightblue;
-  padding: 1.25rem;
+  padding: p2r(20);
   display: flex;
   flex-direction: column;
 }
 
 .bl_talk {
+  // background-color: lightyellow;
   display: flex;
   align-items: center;
   padding: 0 0 0 100px;
-}
-.bl_talk.bl_tank__another {
-  flex-direction: row-reverse;
-  padding: 0 100px 0 0;
-}
-.bl_talk.bl_tank__another svg {
-  transform: scale(-1, 1);
-}
-.bl_talk.bl_tank__another .bl_talkProfile_msg {
-  border-radius: 0px 10px 10px 10px;
-  background-color: white;
+
+  &.bl_tank__another{
+    // background-color: lightskyblue;
+    flex-direction: row-reverse;
+    padding: 0 100px 0 0;
+
+    svg {
+      transform: scale(-1, 1);
+    }
+
+    .bl_talkProfile_msg {
+      border-radius: 0px 10px 10px 10px;
+      background-color: white;
+    }
+  }
 }
 
 .bl_talkProfile_msg {
@@ -105,9 +119,14 @@
 }
 
 .bl_talkProfile > svg {
+  // background-color:red;
   width: 40px;
   max-height: 50px;
 }
+
+// .bl_talkProfile_name {
+  // background-color: mediumorchid;
+// }
 
 .bl_cardUnit {
   display: flex;
@@ -121,10 +140,11 @@
 /* --------------------------------
  * item.ejs
  * -------------------------------- */
-.bl_item {
+
+ .bl_item {
   background-color: lightcoral;
   margin-top: 50px;
-}
+ }
 
 .bl_item_img {
   background-color: lightblue;
@@ -144,11 +164,11 @@
 .bl_item_text_reputation {
   background-color: white;
   margin-top: 5px;
-}
-.bl_item_text_reputation svg {
-  width: 16px;
-  height: 16px;
-  fill: #FFA41D;
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: #FFA41D;
+  }
 }
 
 .bl_item_text_description {
@@ -160,9 +180,10 @@
   background-color: lightpink;
 }
 
+
 .bl_footer {
-  margin-top: 3.125rem;
-  padding: 1.875rem;
+  margin-top: p2r(50);
+  padding: p2r(30);
   background-color: lightseagreen;
   text-align: center;
 }

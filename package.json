@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon -e ejs,js ./bin/www"
+    "start": "nodemon -e ejs,js ./bin/www",
+    "sass": "npx sass --no-source-map ./public/stylesheets/sass/style.scss ./public/stylesheets/style.css --watch"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -11,11 +12,13 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "micromodal": "^0.4.6",
     "morgan": "~1.9.1"
   },
   "devDependencies": {
     "express-session": "^1.17.1",
-    "pg": "^8.5.1",
+    "pg-promise": "^10.9.5",
+    "sass": "^1.32.8",
     "socket.io": "^3.1.2"
   }
 }

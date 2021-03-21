@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <%- include('./partial/header', { myName: myName, myIcon: myIcon }) %>
+  <main>
+    <div class="bl_media bl_item">
+      <figure class="bl_item_img"><img src="/images/items/<%= item.id %>.png" alt="item_image"></figure>
+      <div class="bl_item_text">
+        <h3 class="bl_item_text_ttl"><%= item.title %></h3>
+        <p class="bl_item_text_reputation"><span id="js_star"></span><%= item.rep_count %>個の評価</p>
+        <p class="bl_item_text_description"><%- item.description %></p>
+      </div>
+      <div class="bl_buyBox">
+        <p>値段 N <%= item.price %></p>
+        <p>在庫あり</p>
+        <p>数量</p>
+        <button>カートに入れる</button>
+      </div>
+    </div>
+  </main>
+  <%- include('./partial/footer') %>
+  <%- include('./partial/micromodal') %>
+
+
+
+
+  
+  <script>
+    const $star = document.getElementById('js_star');
+    const $fullStar = '<svg class="el_chatInput_myIcon"><use xlink:href="/images/statics/stars.svg#full"></svg>';
+    const $halfStar = '<svg class="el_chatInput_myIcon"><use xlink:href="/images/statics/stars.svg#half"></svg>';
+    const $borderStar = '<svg class="el_chatInput_myIcon"><use xlink:href="/images/statics/stars.svg#border"></svg>';
+    $star.innerHTML = $fullStar.repeat(<%= item.fullStarCount %>) + $halfStar.repeat(<%= item.halfStarCount %>) + $borderStar.repeat(<%= item.borderStarCount %>);
+
+
+
+
+    
+  </script>
+</body>
+</html>

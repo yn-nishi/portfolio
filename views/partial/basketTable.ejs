@@ -1,0 +1,45 @@
+<% //console.log(itemsInfo)%>
+        <!-- start table-->
+        <div class="bl_basketTable">
+          <!-- start 項目row -->
+          <div class="el_row">
+            <div class="el_cell bl_basketTable_th">
+              <p>商品</p>
+            </div>
+            <div class="el_cell bl_basketTable_th">
+              <p>価格</p>
+            </div>
+            <div class="el_cell bl_basketTable_th">
+              <p>個数</p>
+            </div>
+            <div class="el_cell bl_basketTable_th">
+              <p>小計</p>
+            </div>
+          </div>
+          <!-- end 項目row -->
+          <!-- start カゴの中rows -->
+          <% for(let item of itemsInfo) { %>
+          <div class="el_row">
+            <div class="el_cell bl_basketTable_name">
+              <img src="/images/items/01.png" class="bl_basketTable_name_img">
+              <div class="bl_basketTable_name_text">
+                <p class="bl_basketTable_name_title"><%= item.title %></p>
+                <p class="bl_basketTable_name_type"><%= item.type %></p>
+              </div>
+            </div>
+            <div class="el_cell bl_basketTable_price">
+              <p><%= item.price.toLocaleString() %></p>
+            </div>
+            <div class="el_cell bl_basketTable_qty">
+              <button class="el_btn el_btn_qty" data-btn_minus="1">-</button>
+              <span id="qtyId_<%= item.id %>"><%= basket[item.id] %></span>
+              <button class="el_btn el_btn_qty" onclick="changeQty('<%= item.id %>', 'plus')">+</button>
+            </div>
+            <div class="el_cell bl_basketTable_subTotal">
+              <p><%= (item.price * basket[item.id]).toLocaleString() %></p>
+            </div>
+          </div>
+          <% } %>
+          <!-- end カゴの中rows -->
+        </div>
+        <!-- end table-->

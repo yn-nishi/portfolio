@@ -1,0 +1,12 @@
+
+<% if(obj.sid == myId) { %>
+  <div class="bl_talk">
+<% } else { %>
+  <div class="bl_talk bl_tank__another">
+<% } %>
+  <p class="bl_talkProfile_msg"><%= obj.chat_msg %></p>
+  <div class="bl_talkProfile">
+    <svg><use xlink:href="/images/icons/defs.svg#<%= obj.chat_icon %>"></use></svg>
+    <div class="bl_talkProfile_name"><%= obj.chat_name %></div>
+  </div>
+</div>

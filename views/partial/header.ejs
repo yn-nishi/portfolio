@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='stylesheet' href='/stylesheets/reset.css'>
+  <link rel='stylesheet' href='/stylesheets/style.css'>
+  <link rel='stylesheet' href='/stylesheets/micromodal.css'>
+  <link rel="shortcut icon" href="/images/statics/favicon.png">
+  <title>Document</title>
+</head>
+<body>
+<header id="js_header" class="ly_header">
+  <a href="#" class="bl_logo">
+    <img src="/images/statics/logo.png" alt="site_logo">
+  </a>
+  <div class="bl_chatInput">
+    <input type="text" class="bl_chatInput_name" id="js_chatInput_name" value="<%= myName %>">
+    <input type="text" class="bl_chatInput_msg" id="js_chatInput_msg">
+    <button class="el_btn bl_chatInput_sbm" id="js_chatInput_sbm">✈</button>
+    <svg class="el_chatInput_myIcon"><use xlink:href="/images/icons/defs.svg#<%= myIcon %>"></svg>
+  </div>
+  <div class="bl_pocket">
+    <img src="/images/statics/coin.svg" alt="N-coin" class="el_coin">
+    <span>50,000</span>
+  </div>
+  <div class="bl_basket" data-micromodal-trigger="modal-1" onclick="getBasketData()">
+    <img src="/images/statics/basket.svg" alt="shopping-cart">
+    <span>17</span>
+  </div>
+</header>
+
+<!-- a<svg class="el_chatInput_myIcon"><use xlink:href="/images/icons/defs.svg#06"></svg>b -->
