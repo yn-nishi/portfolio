@@ -1,45 +1,83 @@
-<% //console.log(itemsInfo)%>
-        <!-- start table-->
-        <div class="bl_basketTable">
-          <!-- start 項目row -->
-          <div class="el_row">
-            <div class="el_cell bl_basketTable_th">
-              <p>商品</p>
-            </div>
-            <div class="el_cell bl_basketTable_th">
-              <p>価格</p>
-            </div>
-            <div class="el_cell bl_basketTable_th">
-              <p>個数</p>
-            </div>
-            <div class="el_cell bl_basketTable_th">
-              <p>小計</p>
-            </div>
-          </div>
-          <!-- end 項目row -->
-          <!-- start カゴの中rows -->
-          <% for(let item of itemsInfo) { %>
-          <div class="el_row">
-            <div class="el_cell bl_basketTable_name">
-              <img src="/images/items/01.png" class="bl_basketTable_name_img">
-              <div class="bl_basketTable_name_text">
-                <p class="bl_basketTable_name_title"><%= item.title %></p>
-                <p class="bl_basketTable_name_type"><%= item.type %></p>
-              </div>
-            </div>
-            <div class="el_cell bl_basketTable_price">
-              <p><%= item.price.toLocaleString() %></p>
-            </div>
-            <div class="el_cell bl_basketTable_qty">
-              <button class="el_btn el_btn_qty" data-btn_minus="1">-</button>
-              <span id="qtyId_<%= item.id %>"><%= basket[item.id] %></span>
-              <button class="el_btn el_btn_qty" onclick="changeQty('<%= item.id %>', 'plus')">+</button>
-            </div>
-            <div class="el_cell bl_basketTable_subTotal">
-              <p><%= (item.price * basket[item.id]).toLocaleString() %></p>
+<% if(itemsInfo.length > 0) { %>
+  <!-- start table-->
+  <div class="bl_basketTable">
+    <!-- start 項目row -->
+    <div class="el_row">
+      <div class="el_cell bl_basketTable_th">
+        <p>商品</p>
+      </div>
+      <div class="el_cell bl_basketTable_th">
+        <p>価格</p>
+      </div>
+      <div class="el_cell bl_basketTable_th">
+        <p>個数</p>
+      </div>
+      <div class="el_cell bl_basketTable_th">
+        <p>小計</p>
+      </div>
+    </div>
+    <!-- end 項目row -->
+    <!-- start カゴの中rows -->
+    <% for(let item of itemsInfo) { %>
+      <% if(ss.basket[item.id] > 0) { %>
+        <div class="el_row"> 
+          <div class="el_cell bl_basketTable_name">
+            <img src="/images/items/01.png" class="bl_basketTable_name_img">
+            <div class="bl_basketTable_name_text">
+              <p class="bl_basketTable_name_title"><%= item.title %></p>
+              <p class="bl_basketTable_name_type"><%= item.type %></p>
             </div>
           </div>
-          <% } %>
-          <!-- end カゴの中rows -->
+          <div class="el_cell bl_basketTable_price">
+            <p><%= item.price.toLocaleString() %></p>
+          </div>
+          <div class="el_cell bl_basketTable_qty">
+            <button class="el_btn el_btn_qty" onclick="changeQty('<%= item.id %>', 'minus')">-</button>
+            <span><%= ss.basket[item.id] %></span>
+            <button class="el_btn el_btn_qty" onclick="changeQty('<%= item.id %>', 'plus')">+</button>
+          </div>
+          <div class="el_cell bl_basketTable_subTotal">
+            <p><%= (item.price * ss.basket[item.id]).toLocaleString() %></p>
+          </div>
         </div>
-        <!-- end table-->
+      <% } else { // 個数が0のアイテム %>
+        <div class="el_row">
+          <div class="el_cell bl_basketTable_name">
+            <img src="/images/items/01.png" class="bl_basketTable_name_img">
+            <div class="bl_basketTable_name_text">
+              <p class="bl_basketTable_name_title"><%= item.title %></p>
+              <p class="bl_basketTable_name_type"><%= item.type %></p>
+            </div>
+          </div>
+          <div class="el_cell bl_basketTable_price">
+          </div>
+          <div class="el_cell bl_basketTable_qty">
+            削除されました。
+          </div>
+          <div class="el_cell bl_basketTable_subTotal">
+          </div>
+        </div> 
+      <% } %>
+    <% } %>
+    <!-- end カゴの中rows -->
+  </div>
+  <!-- end table -->
+<% } else { %>
+  <p>何も入っていません。</p>
+<% } %>
+
+<%# アイテムが残っているとき %>
+  <% if(total > 0) { %>
+  <div class="bl_basketTotal">
+    <p>合計 <%= total.toLocaleString() %></p>
+  </div>
+<footer class="modal__footer">
+  <button class="modal__btn modal__btn-primary">購入を確定する</button>
+  <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
+</footer>
+<%# アイテムが残ってないとき %>
+<% } else { %>
+<footer class="modal__footer">
+  <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
+</footer>
+<% } %>

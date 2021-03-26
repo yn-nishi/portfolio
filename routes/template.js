@@ -7,12 +7,7 @@ router.get ('/', async (req, res) => {
   let q = '';
   q = 'SELECT * FROM Chat ORDER BY posted_at DESC';
   const chatLog = await db.many(q);
-    res.render('template', {
-      myId: ss.id,
-      myName: ss.myName,
-      myIcon: ss.myIcon,
-      chatData: chatLog
-    });
+    res.render('template', { ss, chatLog });
 });
 
 

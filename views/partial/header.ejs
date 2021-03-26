@@ -11,23 +11,32 @@
 </head>
 <body>
 <header id="js_header" class="ly_header">
-  <a href="#" class="bl_logo">
-    <img src="/images/statics/logo.png" alt="site_logo">
+  <!-- header content 1 -->
+  <a href="#">
+    <div class="un_logo">
+    <!-- <img src="/images/statics/logo.png" alt="site_logo"> -->
+      <p>にし</p>
+    </div>
   </a>
-  <div class="bl_chatInput">
-    <input type="text" class="bl_chatInput_name" id="js_chatInput_name" value="<%= myName %>">
-    <input type="text" class="bl_chatInput_msg" id="js_chatInput_msg">
-    <button class="el_btn bl_chatInput_sbm" id="js_chatInput_sbm">✈</button>
-    <svg class="el_chatInput_myIcon"><use xlink:href="/images/icons/defs.svg#<%= myIcon %>"></svg>
-  </div>
-  <div class="bl_pocket">
-    <img src="/images/statics/coin.svg" alt="N-coin" class="el_coin">
-    <span>50,000</span>
-  </div>
-  <div class="bl_basket" data-micromodal-trigger="modal-1" onclick="getBasketData()">
-    <img src="/images/statics/basket.svg" alt="shopping-cart">
-    <span>17</span>
+    <!-- header content 2 -->
+  <!-- <div class="bl_chatInput"> -->
+    <form class="bl_chatInput">
+    <p>弾幕</p>
+    <input type="text" class="el_input_text bl_chatInput_name" id="js_chatInput_name" value="<%= ss.name %>">
+    <input type="text" class="el_input_text bl_chatInput_msg" id="js_chatInput_msg" placeholder="Message" autocomplete="off">
+    <button class="el_btn bl_chatInput_sbm" id="js_chatInput_sbm"><img src="/images/icons/send.svg"></button>
+    <svg class="el_chatInput_icon hp_icon_m" id="js_myIcon"><use xlink:href="/images/icons/defs.svg#<%= ss.icon %>"></svg>
+    </form>
+  <!-- </div> -->
+  <!-- header content 3 -->
+  <div class="bl_shopping">
+    <div class="bl_shopping_balance">
+      <img src="/images/icons/coin.svg" alt="所持金" class="el_coin hp_icon_ss">
+      <span id="js_balance"><%= ss.balance.toLocaleString('ja-JP') %></span>
+    </div>
+    <div class="bl_shopping_basket" onclick="showModal('1')">
+      <img src="/images/icons/basket.svg" class="hp_icon_l">
+      <span id="js_itemQty"><%= ss.itemQty %></span>
+    </div>
   </div>
 </header>
-
-<!-- a<svg class="el_chatInput_myIcon"><use xlink:href="/images/icons/defs.svg#06"></svg>b -->

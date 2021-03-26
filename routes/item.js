@@ -2,22 +2,20 @@ var express = require('express');
 var router = express.Router();
 const db = require('../lib/db');
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   const ss = req.session;
   res.render('item', {
-    myName: ss.myName,
-    myIcon: ss.myIcon,
+    ss: ss,
     item: {}
   });
-  
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req, res) => {
   const ss = req.session;
   const id = req.params.id;
   let q = '';
   // 購入済みかを調べる
-  q = `(SELECT purchased_ids @> '${id}' FROM Client WHERE sid = 'aaaa')`; // のちほど aaa を ss.myId へ
+  q = `(SELECT purchased_ids @> '${id}' FROM Client WHERE sid = 'aaaa')`; // のちほど aaa を ss.id へ
   const isPurchased = await db.oneOrNone(q);
   // 未購入の場合
   if(isPurchased === null) {
@@ -34,15 +32,13 @@ router.get('/:id', async (req, res, next) => {
     item.halfStarCount = Math.round((roundDouble - item.fullStarCount * 2));
     item.borderStarCount = 5 - item.fullStarCount - item.halfStarCount;
     res.render('item', {
-      myName: ss.myName,
-      myIcon: ss.myIcon,
-      item: item
+      ss: ss,
+      item: item,
     });
   // 購入済みの場合
   } else {
     res.render('item', {
-      myName: 'purchased = true',
-      myIcon: ss.myIcon,
+      ss: ss,
       item: {}
     });
   }

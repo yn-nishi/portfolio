@@ -1,12 +1,14 @@
 
-<% if(obj.sid == myId) { %>
-  <div class="bl_talk">
-<% } else { %>
-  <div class="bl_talk bl_tank__another">
-<% } %>
-  <p class="bl_talkProfile_msg"><%= obj.chat_msg %></p>
-  <div class="bl_talkProfile">
-    <svg><use xlink:href="/images/icons/defs.svg#<%= obj.chat_icon %>"></use></svg>
-    <div class="bl_talkProfile_name"><%= obj.chat_name %></div>
+<% for(const obj of chatLog) { %>
+  <% if(obj.sid == ss.id) { %>
+    <div class="bl_talk">
+  <% } else { %>
+    <div class="bl_talk bl_tank__another">
+  <% } %>
+    <p class="bl_talk_msg hp_font_s"><%= obj.chat_msg %></p>
+    <div class="bl_talk_profile">
+      <svg class="hp_icon_s"><use xlink:href="/images/icons/defs.svg#<%= obj.chat_icon %>"></use></svg>
+      <div class="bl_talkProfile_name hp_font_ss"><%= obj.chat_name %></div>
+    </div>
   </div>
-</div>
+<% } %>

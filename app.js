@@ -2,7 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+// const logger = require('morgan');
 const session = require('express-session');
 const socket_io = require('socket.io');
 const db = require('./lib/db');
@@ -13,12 +13,12 @@ const testRouter = require('./routes/test');
 const templateRouter = require('./routes/template');
 const itemRouter = require('./routes/item');
 const basketRouter = require('./routes/basket');
+const { IncomingMessage } = require('http');
 
 const app = express();
 // socket.io setup
 const io = socket_io();
 app.io = io;
-
 
 // session setup
 const session_opt = {
@@ -39,58 +39,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// 訪問者の名前とアイコンを勝手に決める
+// ユーザーパラメーター設定
 app.use((req, res, next) => {
-  let ss = req.session;
-  if(!ss.myName) {
-    ss.myName = nameAry[Math.floor(Math.random() * nameAry.length)] + '(仮)';
-  }
-  if(!ss.myIcon) {
-    ss.myIcon = Math.ceil(Math.random() * 26); // 1~26
-    ss.myIcon = ('00' + ss.myIcon).slice(-2); // 01~26
-  }
-  if(!ss.basket) {
-    ss.basket = [];
-  }
-  next();
+  initialize(req, res).then(next());
 });
-
 app.use('/', indexRouter);
 app.use('/item', itemRouter);
 app.use('/test', testRouter);
 app.use('/template', templateRouter);
 app.use('/basket', basketRouter);
-
-// チャット書き込み処理
-app.post('/emit', async (req, res, next) => {
-  // 送信データ取得
-  const ss = req.session;
-  ss.myIcon = req.body.myIcon;
-  ss.myName = req.body.myName;
-  const myMsg = req.body.myMsg;
-  // アイコンと名前を上書き保存
-  // ss.save();
-  // DB 入力
-  let q = '';
-  q = 'INSERT INTO Chat(sid, chat_icon, chat_name, chat_msg, posted_at) VALUES($1, $2, $3, $4, DEFAULT)';
-  await db.none(q, [ss.id, ss.myIcon, ss.myName, myMsg]);
-  // {count: '記事数'} をDBから取得し数字に変換
-  q = 'SELECT COUNT(*) FROM Chat';
-  const postedCount = (await db.one(q))['count'] - 0;
-  // 20件を超えた古いデータから削除
-  if(postedCount > 20) {
-    q ='DELETE FROM Chat WHERE posted_at IN (SELECT posted_at FROM Chat ORDER BY posted_at limit $1)';
-    await db.none(q, [postedCount - 20]);
-  }
-  // 全チャットログをHP閲覧者全員にemit送信
-  q = 'SELECT * FROM Chat ORDER BY posted_at DESC';
-  const chatLog = await db.many(q);
-    io.emit("s2c", chatLog );
-    res.send('1');
-  // });
+app.post('/emit', async (req, res) => {
+  emit(req, res);
 });
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -108,6 +68,91 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+//-------------------//
+//関数定義
+//-------------------//
+const iconMax = 26;
+// ユーザーパラメーター設定
+async function initialize(req, res) {
+  const ss = req.session;
+  // 訪問者の名前を勝手に決める
+  if(!ss.name) {
+    ss.name = nameAry[Math.floor(Math.random() * nameAry.length)] + '(仮)';
+  }
+  // アイコンも勝手に決める
+  ss.iconArray = [];
+  for(let i = 1; i <= iconMax; i++) {
+    ss.iconArray.push(('00' + i).slice(-2)); // ['01', '02', ...'iconMax']
+  }
+  if(!ss.icon) {
+    ss.icon = ss.iconArray[~~(Math.random() * iconMax)];
+  }
+  // お金
+  if(!ss.balance) {
+    ss.balance = 55000;
+  }
+  // 買い物かご初期化
+  if(!ss.basket) {
+    ss.basket = {};
+    // console.log('basket', ss.basket);
+    // ss.basket = {'1': 2, '2': 1, '3': 7}; //test
+  }
+  // 買い物かごの中に個数が0のアイテムあればkeyごと削除 (ユーザーが個数変更中はスルー)
+  if(Object.values(ss.basket).includes(0) && req.url !== '/basket/changeQty') {
+    for (const key in ss.basket) {
+      if(ss.basket[key] === 0) delete ss.basket[key];
+    }
+  }
+  // 買い物かごのアイテム個数計算
+  if(!ss.itemQty) {
+    ss.itemQty = 0;
+  }
+  if(Object.values(ss.basket).length > 0) {
+    ss.itemQty = Object.values(ss.basket).reduce(function(a, x){ return a + x; })
+  }
+  return Promise.resolve();
+}
+
+// チャット書き込み処理
+async function emit(req, res) {
+  const ss = req.session;
+  const body = req.body;
+  // バリデーション
+  if(!body.name.trim() || !body.msg.trim() || !(body.icon - 0 > 0) || !(body.icon - 0 <= iconMax)) {
+    return res.end();
+  }
+  // 送信データ取得
+  ss.icon = body.icon;
+  ss.name = body.name;
+  const msg = body.msg;
+  // DB 入力
+  let q = '';
+  q = 'INSERT INTO Chat(sid, chat_icon, chat_name, chat_msg, posted_at) VALUES($1, $2, $3, $4, DEFAULT)';
+  await db.none(q, [ss.id, ss.icon, ss.name, msg]);
+  // {count: '記事数'} をDBから取得し数字に変換
+  q = 'SELECT COUNT(*) FROM Chat';
+  const postedCount = (await db.one(q))['count'] - 0;
+  // 20件を超えた古いデータから削除
+  if(postedCount > 20) {
+    q ='DELETE FROM Chat WHERE posted_at IN (SELECT posted_at FROM Chat ORDER BY posted_at limit $1)';
+    await db.none(q, [postedCount - 20]);
+  }
+  // 全チャットログを取得
+  q = 'SELECT * FROM Chat ORDER BY posted_at DESC';
+  let chatLog = await db.many(q);
+  // チャットログを元にhtml生成しサイト閲覧者全員に送信
+  app.render('./partial/chatView', { chatLog, ss }, (err, html) => {
+    io.emit("s2c", html );
+  });
+  // お金増やす
+  const income = Math.round(Math.random () * 50000) + 10000;
+  ss.balance += income;
+  app.render('./partial/moko', { income }, (err, html) => {
+  res.json({ ss, income, html });
+});
+
+
+}
 
 const nameAry = [
   '佐藤', '鈴木', '高橋', '田中', '渡辺', '伊藤', '山本', '中村', '小林', '加藤', '吉田', '山田', '佐々木', '山口',

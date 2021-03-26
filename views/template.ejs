@@ -1,5 +1,4 @@
-
-  <%- include('./partial/header', { myName: myName, myIcon: myIcon }) %>
+  <%- include('./partial/header', { ss }) %>
   <main id="js_main" class="ly_main">
     <section class="ly_section">
       <h2 class="el_h2">ここはどこ？</h2>
@@ -13,9 +12,7 @@
           </div>
         </div>
         <div class="bl_media bl_chatView" id="js_chatView">
-          <% for(const obj of chatData) { %>
-          <%- include('./partial/chatView', {obj, myId})  %>
-          <% } %>
+          <%- include('./partial/chatView', { chatLog, ss })  %>
             </div>
           </div>
         </div> <!-- /.bl_media .bl_chatView -->
@@ -48,78 +45,8 @@
       </div>
     </section>
   </main>
-
+  
   <%- include('./partial/footer') %>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    // chat通信モジュール
-    var socket = io();
-    // チャット送信処理
-    // const $icon = document.getElementById('js_chatInput_myIcon');
-    const $name = document.getElementById('js_chatInput_name');
-    const $msg = document.getElementById('js_chatInput_msg');
-    const $sbm = document.getElementById('js_chatInput_sbm');
-    $sbm.onclick = () => {
-      const formData = {
-        'myIcon' : '<%- myIcon %>',
-        'myName' : $name.value,
-        'myMsg': $msg.value
-      };
-      fetch('/emit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-          // credentials: 'same-origin',
-        body: JSON.stringify(formData)
-      })
-      .then((data) => {
-        if(data.ok) $msg.value = '';
-      })
-      .catch(err => console.error('Error:', err));
-    }
-    // Enter key でも送信可
-    $msg.addEventListener("keydown", event => {
-      if (event.isComposing || event.keyCode === 13) {
-        $sbm.click();
-      }
-      return false;
-    });
-    // チャット受信処理
-    const $chatView = document.getElementById('js_chatView');
-    // s2c = server to client
-    socket.on("s2c", (arg) => {
-      // チャット一覧リセット
-      $chatView.innerHTML = '';
-      // 受信したデータでElement作成
-      for(const obj of arg) {
-        const $talk_block = document.createElement('div');
-        $talk_block.className = 'bl_talk bl_tank__another';
-        if(obj['sid'] == '<%= myId %>') {
-        $talk_block.className = 'bl_talk';
-        }
-        $chatView.appendChild($talk_block);
-        const $msg = document.createElement('p');
-        $msg.className = 'bl_talkProfile_msg';
-        $msg.textContent = obj['chat_msg'];
-        $talk_block.appendChild($msg);
-        const $profile = document.createElement('bl_talkProfile');
-        $profile.className = 'bl_talkProfile';
-        $talk_block.appendChild($profile);
-        const $svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-	      const $use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-        $use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `/images/icons/defs.svg#${obj['chat_icon']}`);
-        $svg.appendChild($use);
-        $profile.appendChild($svg);
-        const $name = document.createElement('div');
-        $name.className = 'bl_talkProfile_name';
-        $name.textContent = obj['chat_name'];
-        $profile.appendChild($name)
-      }
-    });
-  </script>
 </body>
-<script>
-</script>
 </html>
