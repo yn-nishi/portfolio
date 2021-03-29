@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg" href="/images/icons/iconsBackup/19.svg">
   <link rel='stylesheet' href='/stylesheets/reset.css'>
   <link rel='stylesheet' href='/stylesheets/style.css'>
   <link rel='stylesheet' href='/stylesheets/micromodal.css'>
-  <link rel="shortcut icon" href="/images/statics/favicon.png">
   <title>Document</title>
 </head>
 <body>
 <header id="js_header" class="ly_header">
   <!-- header content 1 -->
-  <a href="#">
+  <a href="http://localhost:3000/">
     <div class="un_logo">
     <!-- <img src="/images/statics/logo.png" alt="site_logo"> -->
       <p>にし</p>
@@ -31,11 +31,11 @@
   <!-- header content 3 -->
   <div class="bl_shopping">
     <div class="bl_shopping_balance">
-      <img src="/images/icons/coin.svg" alt="所持金" class="el_coin hp_icon_ss">
+      <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_s">
       <span id="js_balance"><%= ss.balance.toLocaleString('ja-JP') %></span>
     </div>
     <div class="bl_shopping_basket" onclick="showModal('1')">
-      <img src="/images/icons/basket.svg" class="hp_icon_l">
+      <img src="/images/icons/basket.svg" class="hp_icon_m">
       <span id="js_itemQty"><%= ss.itemQty %></span>
     </div>
   </div>

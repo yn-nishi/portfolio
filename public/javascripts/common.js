@@ -21,9 +21,12 @@ async function showModal(modalId) {
 // 買い物かごに入っているアイテムのHTMLを取得してモーダルに反映
 async function getBasketData() {
   let data = await fetch('/basket/show', { method: 'POST' });
-  data = await data.json();
-  document.getElementById('modal-1-content').innerHTML = data['html'];
-  document.getElementById('js_itemQty').textContent = data['ss']['itemQty']
+  if(data.ok) {
+    data = await data.json();
+    document.getElementById('modal-1-content').innerHTML = data['html'];
+    document.getElementById('js_itemQty').textContent = data['ss']['itemQty'];
+    document.getElementById('modal-1-title').textContent = '購入完了';
+  }
 }
 
 // 買い物かごに入れる
@@ -31,6 +34,7 @@ async function addBasketData(id) {
   let data = await fetch('/basket/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    credentials: 'same-origin',
     body: JSON.stringify({ id: id - 0 })
   });
   showModal(1);
@@ -41,24 +45,23 @@ async function changeQty(id, mathType) {
   let data = await fetch('/basket/changeQty', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body: JSON.stringify({ id: id, mathType: mathType })
+    credentials: 'same-origin',
+    body: JSON.stringify({ id, mathType })
   });
   data = await data.json();
-  document.getElementById('modal-1-content').innerHTML = data['html'];
-  document.getElementById('js_itemQty').textContent = data['ss']['itemQty'];
+  document.getElementById('modal-1-content').innerHTML = data.html;
+  document.getElementById('js_itemQty').textContent = data.ss.itemQty;
 }
 
 // 購入処理
 async function payment() {
   let data = await fetch('/basket/payment', { method: 'POST' });
-  const paymentHtml = await data.text();
-  document.getElementById('modal-1-content').innerHTML = paymentHtml;
+  data = await data.json();
+  document.getElementById('modal-1-content').innerHTML = data.html;
+  document.getElementById('js_itemQty').textContent = data.ss.itemQty;
+
 }
 
-document.body.addEventListener('click', async () => {
-  let data = await fetch('/basket/payment', { method: 'POST' });
-
-});
 
 // アイコン関係
 const $pickIconWin = document.getElementById('js_pickIcon');
@@ -68,7 +71,6 @@ $myIcon.addEventListener('click', () => {
   $pickIconWin.style.display = 'block';
   const iconRect = $myIcon.getBoundingClientRect();
   const pickIconWinRect = $pickIconWin.getBoundingClientRect();
-  console.log('kfoekfekoek');
   $pickIconWin.style.top = iconRect.bottom + 15 + 'px';
   $pickIconWin.style.left = iconRect.left +  iconRect.width - pickIconWinRect.width / 2 + 'px';
 });
@@ -80,7 +82,7 @@ document.addEventListener('click', (e) => {
 });
 function setMyIcon(num) {
   $use.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `/images/icons/defs.svg#${num}`);
-    $pickIconWin.style.display = 'none';
+  $pickIconWin.style.display = 'none';
 }
 
 // chat送信
@@ -112,7 +114,8 @@ async function submitChat(e) {
   };
   let data = await fetch('/emit', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    credentials: 'same-origin',
     body: JSON.stringify(formData)
   });
   if(data.ok) {
@@ -123,22 +126,41 @@ async function submitChat(e) {
     $msg.placeholder= 'Message';
   }
   data = await data.json();
-  document.body.insertAdjacentHTML('beforeend', data.html);
+  moko(data);
   $balance.textContent = data.ss.balance.toLocaleString('ja-JP');
-  moko(data.income);
   return false;
 }
 // チャット受信
-const $chatView = document.getElementById('js_chatView');
-socket.on("s2c", (arg) => {
-  $chatView.innerHTML = arg;
+socket.on("s2c", (data) => {
+  if(document.getElementById('js_chatView') !== null) {
+    document.getElementById('js_chatView').innerHTML = data['html'];
+  }
+  const $barrage = document.createElement('div');
+  $barrage.className = 'un_barrage';
+  $barrage.textContent = data['msg'];
+  document.body.appendChild($barrage);
+  $barrage.style.display = 'inline-block';
+  const rect = $barrage.getBoundingClientRect();
+  $barrage.style.left = window.outerWidth + 'px';
+  $barrage.style.top = Math.abs(~~(Math.random() * document.documentElement.clientHeight) - rect.height) + 'px';
+  let begin = new Date() - 0;
+  let timer = 10000;
+  const barrageId = setInterval(() => {
+    var current = new Date() - begin;
+    if (current > timer) {
+        clearInterval(barrageId);
+        current = timer;
+        $barrage.remove();
+    }
+    $barrage.style.left = window.outerWidth - (2 * rect.width + window.outerWidth) * (current / timer) + 'px';
+  }, 10);
 });
 
-// もこもこ 
-function moko(income) {
-  const $moko = document.getElementById('js_' + income);
+// お金が増える時のもこもこ
+function moko(data) {
+  document.body.insertAdjacentHTML('beforeend', data.html);
+  const $moko = document.getElementById('js_' + data.income);
   const rect = $balance.getBoundingClientRect();
-  console.log(rect);
   let min = rect.left - 1.5 * rect.width;
   let max = rect.right - 1.5 * rect.width;
   let startTop = rect.bottom  + 30 + (Math.random () * 30);
@@ -146,12 +168,42 @@ function moko(income) {
   let begin = new Date() - 0;
   let timer = 3000;
   const id = setInterval(() => {
-      var current = new Date() - begin;
-      if (current > timer) {
-          clearInterval(id);
-          current = timer;
-          $moko.remove();
-      }
-      $moko.style.top = startTop - (startTop + 30) * (current / timer) + "px";
-    }, 10);
+    var current = new Date() - begin;
+    if (current > timer) {
+        clearInterval(id);
+        current = timer;
+        $moko.remove();
+    }
+    $moko.style.top = startTop - (startTop + 35) * (current / timer) + "px";
+  }, 10);
 }
+
+// 評価送信
+async function appraise(review) {
+  let data = await fetch('/item/appraise', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    credentials: 'same-origin',
+    body: JSON.stringify(review)
+  });
+  if(data.ok) {
+    data = await data.json();
+    document.getElementById('js_reputation').innerHTML = data.starHtml;
+    document.getElementById('js_reputation_count').textContent = data.rep_count + '個の評価';
+    document.getElementById('js_myReputation').innerHTML = data.myStarHtml;
+  }
+  
+  return false;
+}
+
+
+
+
+// document.getElementById('js_home').href = location.protocol + '//' + location.host;
+
+// console.log('Location.origin',Location.origin);
+// console.log('Location.username',Location.username);
+// console.log('location.protocol',location.protocol);
+// console.log('Location.href',Location.href);
+// console.log('location.port',location.port);
+// console.log('location.host',location.host);

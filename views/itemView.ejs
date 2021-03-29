@@ -1,0 +1,24 @@
+  <%- include('./partial/header', { ss: ss }) %>
+  <main>
+    <section class="ly_section">
+      <% for(let item of items) { %>
+      <div class="bl_media bl_item">
+        <figure class="bl_item_img"><img src="/images/items/<%= item.id %>.png" alt="item_image"></figure>
+        <div class="bl_item_text">
+          <h3 class="bl_item_text_ttl"><%= item.title %></h3>
+          <p class="bl_item_text_reputation"><span class="fiveStar"><%- item.starHtml %></span><%= item.rep_count %>個の評価</p>
+          <p class="hp_centering"><img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss"><%= item.price %></p>
+          <h3 class="bl_item_text_ttl"><%= item.type %></h3>
+          <p><%= item.description %></p>
+        </div>
+      </div>
+      <% } %>
+    </section>
+  </main>
+  <%- include('./partial/footer') %>
+</body>
+</html>
+
+
+<%// if(isPurchased) { %>
+  <%// } %>

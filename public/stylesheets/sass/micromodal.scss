@@ -1,9 +1,15 @@
-@charset "UTF-8";
+
+$gray1: #f7f7f7;
+$gray2: #f0ece7;
+$gray3: #ddd;
+$gray4: #aaa;
+$blue: #3e62ad;
 /**************************\
   Basic Modal Styles
 \**************************/
+
 .modal {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
 }
 
 .modal__overlay {
@@ -12,7 +18,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0,0,0,0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,64 +49,52 @@
   font-weight: 600;
   font-size: 1.25rem;
   line-height: 1.25;
-  color: #3e62ad;
+  color: $blue;
   box-sizing: border-box;
 }
 
 .modal__close {
-  background: #f0ece7;
+  background: $gray2;
   border-radius: 3px;
   border: 0;
   cursor: pointer;
 }
 
-.modal__header .modal__close:before {
-  content: "✕";
-}
+.modal__header .modal__close:before { content: "\2715"; }
 
 .modal__content {
   /* background-color: lightgoldenrodyellow; */
   margin-top: 1rem;
   /* margin-bottom: 2rem; */
   line-height: 1.5;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(0,0,0,.8);
 }
+
+
 
 /**************************\
   Demo Animation Style
 \**************************/
 @keyframes mmfadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from { opacity: 0; }
+      to { opacity: 1; }
 }
+
 @keyframes mmfadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+    from { opacity: 1; }
+      to { opacity: 0; }
 }
+
 @keyframes mmslideIn {
-  from {
-    transform: translateY(15%);
-  }
-  to {
-    transform: translateY(0);
-  }
+  from { transform: translateY(15%); }
+    to { transform: translateY(0); }
 }
+
 @keyframes mmslideOut {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-10%);
-  }
+    from { transform: translateY(0); }
+    to { transform: translateY(-10%); }
 }
+
 .micromodal-slide {
   display: none;
 }
@@ -109,20 +103,20 @@
   display: block;
 }
 
-.micromodal-slide[aria-hidden=false] .modal__overlay {
-  animation: mmfadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+.micromodal-slide[aria-hidden="false"] .modal__overlay {
+  animation: mmfadeIn .3s cubic-bezier(0.0, 0.0, 0.2, 1);
 }
 
-.micromodal-slide[aria-hidden=false] .modal__container {
-  animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+.micromodal-slide[aria-hidden="false"] .modal__container {
+  animation: mmslideIn .3s cubic-bezier(0, 0, .2, 1);
 }
 
-.micromodal-slide[aria-hidden=true] .modal__overlay {
-  animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+.micromodal-slide[aria-hidden="true"] .modal__overlay {
+  animation: mmfadeOut .3s cubic-bezier(0.0, 0.0, 0.2, 1);
 }
 
-.micromodal-slide[aria-hidden=true] .modal__container {
-  animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+.micromodal-slide[aria-hidden="true"] .modal__container {
+  animation: mmslideOut .3s cubic-bezier(0, 0, .2, 1);
 }
 
 .micromodal-slide .modal__container,
@@ -130,9 +124,11 @@
   will-change: transform;
 }
 
+
 /* --------------------------------
  * Added By yn_nishi
  * -------------------------------- */
+
 .bl_basketTable {
   display: table;
   /* border-bottom: 1px solid gray; */
@@ -148,15 +144,14 @@
   display: table-cell;
   vertical-align: middle;
   text-align: center;
-  border-top: 1px solid #aaa;
+  border-top: 1px solid $gray4;
 }
-
-.el_row:last-of-type > .el_cell {
-  border-bottom: 1px solid #aaa;
+.el_row:last-of-type > .el_cell{
+  border-bottom: 1px solid $gray4;
   /* background-color: lightsalmon; */
 }
 
-.el_row.el_row_noBorder > .el_cell {
+.el_row.el_row_noBorder > .el_cell{
   border: none;
 }
 
@@ -175,7 +170,6 @@
   margin-left: 20px;
   text-align: left;
 }
-
 .el_btn_qty {
   /* display: inline-block; */
   vertical-align: middle;
@@ -185,13 +179,11 @@
   width: 20px;
   height: 20px;
 }
-
 .hp_btn_plus {
-  background: url("/images/icons/plus.svg") no-repeat center/10px #ddd;
+  background: url('/images/icons/plus.svg') no-repeat center/10px $gray3;
 }
-
 .hp_btn_minus {
-  background: url("/images/icons/minus.svg") no-repeat center/10px #ddd;
+  background: url('/images/icons/minus.svg') no-repeat center/10px $gray3;
 }
 
 .bl_basketCalc {
@@ -207,6 +199,7 @@
   /* justify-content: flex-end; */
 }
 
+
 .modal__footer {
   text-align: right;
   margin-top: 1rem;
@@ -219,10 +212,10 @@
 }
 
 .el_btn_purchase {
-  background-color: #3e62ad;
+  background-color: $blue;
   color: #fff;
-}
-.el_btn_purchase:disabled {
-  background-color: #aaa;
-  cursor: default;
+  &:disabled {
+    background-color: $gray4;
+    cursor: default;
+  }
 }

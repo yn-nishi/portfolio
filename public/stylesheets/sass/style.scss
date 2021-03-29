@@ -1,13 +1,13 @@
 
-@function p2r($size) {  
-  @return ($size / 16) + rem;
-}
 $gray1: #f7f7f7;
 $gray2: #f0ece7;
 $gray3: #ddd;
 $gray4: #aaa;
+$blue: #3e62ad;
 
-
+@function p2r($size) {  
+  @return ($size / 16) + rem;
+}
 
 body, input {
   font-family: 'Hiragino Maru Gothic ProN', 'Hiragino Maru Gothic Pro', sans-serif;
@@ -80,9 +80,7 @@ body, input {
   }
 }
 
-.hp_ph_red::placeholder {
-  color: #ee4d4d;
-}
+
 
 .bl_chatInput_sbm {
   top: -1px;
@@ -105,6 +103,8 @@ body, input {
 .el_btn {
   outline: none;
   position: relative;
+  border: 0;
+  border-radius: 3px;
   cursor: pointer;
   &:active {
     top: 1px;
@@ -135,31 +135,35 @@ body, input {
   display: flex;
   justify-content: center;
   align-items: center;
-  // & > img {
-    // width: p2r(15);
-  // }
-  & > span {
-    display: inline-block;
+    & > span {
     position: absolute;
     z-index: 10;
-    top: 0%;
-    left: 60%;
+    top: -5%;
+    left: 58%;
     transform: translate(-50%, -50%);
-    padding: p2r(3);
-    border-radius: 5px;
-    background-color: $gray4;
+    // text-align: center;
+    color: $blue;
+    font-size: p2r(14);
+    font-weight: bold;
+    -webkit-text-stroke: 1px $blue;
+    letter-spacing : 1px;
   }
+  & > img {
+    cursor: pointer;
+  }
+}
+
+.el_fiveStar_self {
+  cursor: pointer;
 }
 
 .ly_main {
   margin-top: 0;
 }
 
-
 .ly_section {
   background-color: #f7f7f7;
-  // margin-top: p2r(30);
-  padding: 130px;
+  padding: p2r(30);
   &:nth-of-type(even) {
     margin-top: 0;
     background-color: #eee;
@@ -172,7 +176,7 @@ body, input {
 
 .bl_mediaUnit {
   margin-top: p2r(10);
-  height: 30vh;
+  height: 50vh;
   &2 {
     display: flex;
   }
@@ -187,7 +191,7 @@ body, input {
 
 .bl_chatView {
   background-color: lightblue;
-  padding: p2r(20);
+  padding: p2r(10);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -198,7 +202,6 @@ body, input {
   display: flex;
   align-items: center;
   padding: 0 0 0 100px;
-
   &.bl_tank__another{
     // background-color: lightskyblue;
     flex-direction: row-reverse;
@@ -241,7 +244,6 @@ body, input {
 
  .bl_item {
   background-color: lightcoral;
-  margin-top: 50px;
  }
 
 .bl_item_img {
@@ -263,8 +265,8 @@ body, input {
   background-color: white;
   margin-top: 5px;
   svg {
-    width: 16px;
-    height: 16px;
+    // width: 16px;
+    // height: 16px;
     fill: #FFA41D;
   }
 }
@@ -297,12 +299,10 @@ body, input {
   background-color: #fff;
   & > svg {
     margin: 3px;
-
     &:hover {
-  border: solid 1px $gray3;
-  box-shadow: 1px 1px 2px $gray4;
-  transform: scale(1.2);
-
+      border: solid 1px $gray3;
+      box-shadow: 1px 1px 2px $gray4;
+      transform: scale(1.2);
     }
   }
 }
@@ -313,11 +313,11 @@ body, input {
  * -------------------------------- */
  .un_moko {
   position: absolute;
+  z-index: 20;
   &_inner {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('/images/icons/moko1.png');
     background-size:100% 100%;
     background-repeat: no-repeat;
     width: 120px;
@@ -338,6 +338,7 @@ body, input {
   0% { transform: rotateY(0deg) }
   100% { transform: rotateY(360deg) }
 }
+
 @keyframes fuwafuwa {
   0% { transform:translateX(0px) }
   20% { transform:translateX(15px) }
@@ -347,7 +348,31 @@ body, input {
   80% { transform:translateX(-15px) }
   100% { transform:translateX(0px) }
 }
+/* --------------------------------
+ * unique class
+ * -------------------------------- */
 
+.un_barrage {
+  position: fixed;
+  z-index: 10000;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-color: black;
+  font-size: 60px;
+  white-space: nowrap;
+}
+
+
+/* --------------------------------
+ * element class
+ * -------------------------------- */
+
+.el_coin {
+  margin: 0 5px;
+  // vertical-align: baseline;
+  // transform: translateY(10%);
+
+}
 
 /* --------------------------------
  * helper
@@ -376,6 +401,20 @@ body, input {
 .hp_font_ss {
   font-size: p2r(10);
 }
+
 .hp_font_s {
   font-size: p2r(14);
+}
+
+.hp_font_red {
+  color: #ee4d4d;
+}
+
+.hp_ph_red::placeholder {
+  color: #ee4d4d;
+}
+
+.hp_centering {
+  display: flex;
+  align-items: center;
 }

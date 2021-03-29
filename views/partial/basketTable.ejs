@@ -3,21 +3,13 @@
   <div class="bl_basketTable">
     <!-- start 項目row -->
     <div class="el_row">
-      <div class="el_cell bl_basketTable_th">
-        <p>商品</p>
-      </div>
-      <div class="el_cell bl_basketTable_th">
-        <p>価格</p>
-      </div>
-      <div class="el_cell bl_basketTable_th">
-        <p>個数</p>
-      </div>
-      <div class="el_cell bl_basketTable_th">
-        <p>小計</p>
-      </div>
+      <div class="el_cell bl_basketTable_th"><p>商品</p></div>
+      <div class="el_cell bl_basketTable_th"><p>価格</p></div>
+      <div class="el_cell bl_basketTable_th"><p>個数</p></div>
+      <div class="el_cell bl_basketTable_th"><p>小計</p></div>
     </div>
-    <!-- end 項目row -->
-    <!-- start カゴの中rows -->
+    <!-- ⬆end 項目row -->
+    <%# start アイテム rows %>
     <% for(let item of itemsInfo) { %>
       <% if(ss.basket[item.id] > 0) { %>
         <div class="el_row"> 
@@ -32,9 +24,9 @@
             <p><%= item.price.toLocaleString() %></p>
           </div>
           <div class="el_cell bl_basketTable_qty">
-            <button class="el_btn el_btn_qty" onclick="changeQty('<%= item.id %>', 'minus')">-</button>
+            <button class="el_btn el_btn_qty hp_btn_minus" onclick="changeQty('<%= item.id %>', 'minus')"></button>
             <span><%= ss.basket[item.id] %></span>
-            <button class="el_btn el_btn_qty" onclick="changeQty('<%= item.id %>', 'plus')">+</button>
+            <button class="el_btn el_btn_qty hp_btn_plus" onclick="changeQty('<%= item.id %>', 'plus')"></button>
           </div>
           <div class="el_cell bl_basketTable_subTotal">
             <p><%= (item.price * ss.basket[item.id]).toLocaleString() %></p>
@@ -49,35 +41,76 @@
               <p class="bl_basketTable_name_type"><%= item.type %></p>
             </div>
           </div>
-          <div class="el_cell bl_basketTable_price">
-          </div>
+          <div class="el_cell bl_basketTable_price"></div>
           <div class="el_cell bl_basketTable_qty">
             削除されました。
           </div>
-          <div class="el_cell bl_basketTable_subTotal">
-          </div>
+          <div class="el_cell bl_basketTable_subTotal"></div>
         </div> 
       <% } %>
     <% } %>
-    <!-- end カゴの中rows -->
+    <%# ⬆end アイテム rows %>
+    <%# 金額計算 %>
+    <% if(total > 0) { %>
+      <% //if(false) { %>
+      <div class="el_row">
+        <div class="el_cell"></div>
+        <div class="el_cell"></div>
+        <div class="el_cell el_cell_flex">
+          <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss">
+          <p>合計</p></div>
+        <div class="el_cell">
+          <p class="hp_font_red">-<%= total.toLocaleString() %></p>
+        </div>
+      </div>
+      <div class="el_row el_row_noBorder">
+        <div class="el_cell"></div>
+        <div class="el_cell"></div>
+        <div class="el_cell el_cell_flex">
+          <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss">
+          <p>所持金</p>
+        </div>
+        <div class="el_cell">
+          <p><%= ss.balance.toLocaleString() %></p>
+        </div>
+      </div>
+      <div class="el_row el_row_noBorder">
+        <div class="el_cell"></div>
+        <div class="el_cell"></div>
+        <div class="el_cell el_cell_flex">
+          <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss">
+          <p>購入後</p>
+        </div>
+        <div class="el_cell">
+          <% if(ss.balance - total < 0) { %>
+            <p class="hp_font_red"><%= (ss.balance - total).toLocaleString() %></p>
+          <% } else { %>
+            <p><%= (ss.balance - total).toLocaleString() %></p>
+            <% } %>
+        </div>
+      </div>
+    <% } %>
+    <%# ⬆end 金額計算 %>
   </div>
-  <!-- end table -->
+  <!-- ⬆end table -->
+ 
 <% } else { %>
   <p>何も入っていません。</p>
 <% } %>
 
 <%# アイテムが残っているとき %>
   <% if(total > 0) { %>
-  <div class="bl_basketTotal">
-    <p>合計 <%= total.toLocaleString() %></p>
-  </div>
 <footer class="modal__footer">
-  <button class="modal__btn modal__btn-primary">購入を確定する</button>
-  <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
+  <button class="el_btn" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
+  <% if(ss.balance - total > 0) { %>
+  <button class="el_btn el_btn_purchase" onclick="payment()">購入を確定する</button>
+  <% } else { %>
+  <button class="el_btn el_btn_purchase" disabled>Nコインが足りません</button>
+  <% } %>
 </footer>
 <%# アイテムが残ってないとき %>
 <% } else { %>
 <footer class="modal__footer">
-  <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
+  <button class="el_btn" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
 </footer>
 <% } %>

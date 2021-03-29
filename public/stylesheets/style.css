@@ -71,10 +71,6 @@ body, input {
   background-color: #f7f7f7;
 }
 
-.hp_ph_red::placeholder {
-  color: #ee4d4d;
-}
-
 .bl_chatInput_sbm {
   top: -1px;
   height: 1.875rem;
@@ -95,6 +91,8 @@ body, input {
 .el_btn {
   outline: none;
   position: relative;
+  border: 0;
+  border-radius: 3px;
   cursor: pointer;
 }
 .el_btn:active {
@@ -128,15 +126,23 @@ body, input {
   align-items: center;
 }
 .bl_shopping_basket > span {
-  display: inline-block;
   position: absolute;
   z-index: 10;
-  top: 0%;
-  left: 60%;
+  top: -5%;
+  left: 58%;
   transform: translate(-50%, -50%);
-  padding: 0.1875rem;
-  border-radius: 5px;
-  background-color: #aaa;
+  color: #3e62ad;
+  font-size: 0.875rem;
+  font-weight: bold;
+  -webkit-text-stroke: 1px #3e62ad;
+  letter-spacing: 1px;
+}
+.bl_shopping_basket > img {
+  cursor: pointer;
+}
+
+.el_fiveStar_self {
+  cursor: pointer;
 }
 
 .ly_main {
@@ -145,7 +151,7 @@ body, input {
 
 .ly_section {
   background-color: #f7f7f7;
-  padding: 130px;
+  padding: 1.875rem;
 }
 .ly_section:nth-of-type(even) {
   margin-top: 0;
@@ -158,7 +164,7 @@ body, input {
 
 .bl_mediaUnit {
   margin-top: 0.625rem;
-  height: 30vh;
+  height: 50vh;
 }
 .bl_mediaUnit2 {
   display: flex;
@@ -173,7 +179,7 @@ body, input {
 
 .bl_chatView {
   background-color: lightblue;
-  padding: 1.25rem;
+  padding: 0.625rem;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -222,7 +228,6 @@ body, input {
  * -------------------------------- */
 .bl_item {
   background-color: lightcoral;
-  margin-top: 50px;
 }
 
 .bl_item_img {
@@ -245,8 +250,6 @@ body, input {
   margin-top: 5px;
 }
 .bl_item_text_reputation svg {
-  width: 16px;
-  height: 16px;
   fill: #FFA41D;
 }
 
@@ -290,12 +293,12 @@ body, input {
  * -------------------------------- */
 .un_moko {
   position: absolute;
+  z-index: 20;
 }
 .un_moko_inner {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("/images/icons/moko1.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   width: 120px;
@@ -343,6 +346,26 @@ body, input {
   }
 }
 /* --------------------------------
+ * unique class
+ * -------------------------------- */
+.un_barrage {
+  position: fixed;
+  z-index: 10000;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-color: black;
+  font-size: 60px;
+  white-space: nowrap;
+}
+
+/* --------------------------------
+ * element class
+ * -------------------------------- */
+.el_coin {
+  margin: 0 5px;
+}
+
+/* --------------------------------
  * helper
  * -------------------------------- */
 .hp_icon_ss {
@@ -371,4 +394,17 @@ body, input {
 
 .hp_font_s {
   font-size: 0.875rem;
+}
+
+.hp_font_red {
+  color: #ee4d4d;
+}
+
+.hp_ph_red::placeholder {
+  color: #ee4d4d;
+}
+
+.hp_centering {
+  display: flex;
+  align-items: center;
 }

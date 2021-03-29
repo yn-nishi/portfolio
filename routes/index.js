@@ -1,46 +1,19 @@
 var express = require('express');
 var router = express.Router();
-const Pool = require('pg').Pool
+const db = require('../lib/db');
 
-// postgreSQL setup
-const pool = new Pool({
-  user: '',
-  host: '',
-  database: 'api',
-  password: '',
-  port: 5432,
-})
-
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  var session = req.session;
-
-  if (!!session.visitCount) {
-    session.visitCount += 1;
-  } else {
-    session.visitCount = 1;
+router.get ('/', async (req, res) => {
+  const ss = req.session;
+  let items = {};
+  let qr = '';
+  const itemIds = Object.keys(ss.repository);
+  if(itemIds.length > 0) {
+    qr = 'SELECT * FROM Items WHERE id IN ($1:csv)';
+    items = await db.any(qr, [itemIds]);
   }
-  session.msg = `こんちは、${session.visitCount}回目の訪問だよ<br>おあなたのID${session.id}`;
-  console.log(req.session);
-  res.render('index', {
-    title: 'Express!!',
-    visitCount: session.visitCount,
-    msg: session.msg
-  });
-  
+  qr = 'SELECT * FROM Chat ORDER BY posted_at DESC';
+  const chatLog = await db.many(qr);
+  res.render('index', { ss, chatLog, items });
 });
 
-router.get('/aaa', function(req, res, next) {
-  pool.query('SELECT * FROM users ORDER BY id ASC', (pgError, pgData) => {
-    if (pgError) {
-      throw pgError
-    }
-    res.render('index', {
-      title: 'Express!!',
-      visitCount: 'session.visitCount',
-      msg: pgData.rows[2].name + ' | ' + pgData.rows[2].email
-    });
-  });
-});
 module.exports = router;

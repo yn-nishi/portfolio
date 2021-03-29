@@ -6,6 +6,9 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const socket_io = require('socket.io');
 const db = require('./lib/db');
+const pgSession = require('connect-pg-simple')(session);
+
+
 
 // router setup
 const indexRouter = require('./routes/index');
@@ -16,16 +19,18 @@ const basketRouter = require('./routes/basket');
 const { IncomingMessage } = require('http');
 
 const app = express();
+
 // socket.io setup
 const io = socket_io();
 app.io = io;
 
 // session setup
 const session_opt = {
+  store: new pgSession({ pgPromise : db, tableName : 'session' }),
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true, 
-  cookie: { maxAge: 60 * 60 * 1000 },
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
 };
 app.use(session(session_opt));
 
@@ -68,9 +73,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-//-------------------//
-//関数定義
-//-------------------//
+//-----------------------
+// 関数定義
+//-----------------------
 const iconMax = 26;
 // ユーザーパラメーター設定
 async function initialize(req, res) {
@@ -91,14 +96,12 @@ async function initialize(req, res) {
   if(!ss.balance) {
     ss.balance = 55000;
   }
-  // 買い物かご初期化
+  // 買い物かご
   if(!ss.basket) {
     ss.basket = {};
-    // console.log('basket', ss.basket);
-    // ss.basket = {'1': 2, '2': 1, '3': 7}; //test
   }
-  // 買い物かごの中に個数が0のアイテムあればkeyごと削除 (ユーザーが個数変更中はスルー)
-  if(Object.values(ss.basket).includes(0) && req.url !== '/basket/changeQty') {
+  // 買い物かごの中に個数が0のアイテムあればkeyごと削除 (買い物かご操作中はスルー)
+  if(Object.values(ss.basket).includes(0) && (req.url !== '/basket/changeQty' || req.url !== '/basket/payment')) {
     for (const key in ss.basket) {
       if(ss.basket[key] === 0) delete ss.basket[key];
     }
@@ -109,7 +112,19 @@ async function initialize(req, res) {
   }
   if(Object.values(ss.basket).length > 0) {
     ss.itemQty = Object.values(ss.basket).reduce(function(a, x){ return a + x; })
+  } else {
+    ss.itemQty = 0;
   }
+  // 購入済アイテム
+  if(!ss.repository) {
+    ss.repository = {};
+  }
+  // 購入済アイテム
+  if(!ss.review) {
+    ss.review = {};
+  }
+
+  // ss.repository = {};
   return Promise.resolve();
 }
 
@@ -125,31 +140,28 @@ async function emit(req, res) {
   ss.icon = body.icon;
   ss.name = body.name;
   const msg = body.msg;
-  // DB 入力
-  let q = '';
-  q = 'INSERT INTO Chat(sid, chat_icon, chat_name, chat_msg, posted_at) VALUES($1, $2, $3, $4, DEFAULT)';
-  await db.none(q, [ss.id, ss.icon, ss.name, msg]);
-  // {count: '記事数'} をDBから取得し数字に変換
-  q = 'SELECT COUNT(*) FROM Chat';
-  const postedCount = (await db.one(q))['count'] - 0;
-  // 20件を超えた古いデータから削除
+  let qr = '';
+  qr = 'INSERT INTO Chat(sid, chat_icon, chat_name, chat_msg, posted_at) VALUES($1, $2, $3, $4, DEFAULT)';
+  await db.none(qr, [ss.id, ss.icon, ss.name, msg]);
+  qr = 'SELECT COUNT(*) FROM Chat';
+  const postedCount = (await db.one(qr))['count'] - 0;
   if(postedCount > 20) {
-    q ='DELETE FROM Chat WHERE posted_at IN (SELECT posted_at FROM Chat ORDER BY posted_at limit $1)';
-    await db.none(q, [postedCount - 20]);
+    qr ='DELETE FROM Chat WHERE posted_at IN (SELECT posted_at FROM Chat ORDER BY posted_at limit $1)';
+    await db.none(qr, [postedCount - 20]);
   }
-  // 全チャットログを取得
-  q = 'SELECT * FROM Chat ORDER BY posted_at DESC';
-  let chatLog = await db.many(q);
-  // チャットログを元にhtml生成しサイト閲覧者全員に送信
+  // チャットログをサイト閲覧者全員に送信
+  qr = 'SELECT * FROM Chat ORDER BY posted_at DESC';
+  let chatLog = await db.many(qr);
+  // console.log(chatLog);
   app.render('./partial/chatView', { chatLog, ss }, (err, html) => {
-    io.emit("s2c", html );
+    io.emit("s2c", { html, msg: chatLog[0]['chat_msg'] });
   });
   // お金増やす
   const income = Math.round(Math.random () * 50000) + 10000;
   ss.balance += income;
   app.render('./partial/moko', { income }, (err, html) => {
-  res.json({ ss, income, html });
-});
+    res.json({ ss, income, html });
+  });
 
 
 }
@@ -169,5 +181,18 @@ const nameAry = [
   '横田', '岡崎', '荒井', '大石', '鎌田', '成田', '宮田', '小田', '石橋', '篠原', '須藤', '河野', '大沢', '小西', '南', '高山',
   '栗原', '伊東', '松原', '三宅', '福井', '大森', '奥村', '岡', '内山', '片岡','長田','北川','迫','柿本','安岡'
   ];
+
+  //  javascript実験場
+
+//   let aaa = {}
+//   let bbb = { abc: 'def'}
+// console.log('aaa',aaa);
+// console.log('!aaa', !aaa);
+// console.log('!!aaa', !!aaa);
+// console.log('aaa > 0', aaa > 0);
+// console.log('aaa < 0', aaa < 0);
+// console.log('objectkeys(aaa).length',Object.keys(aaa).length);
+// console.log('bbb.length', bbb.length);
+// console.log('hasown bbb', bbb.hasOwnProperty('abc'));
 
 module.exports = app;

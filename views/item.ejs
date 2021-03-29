@@ -1,51 +1,49 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
+
   <%- include('./partial/header', { ss: ss }) %>
   <main>
-    <div class="bl_media bl_item">
-      <figure class="bl_item_img"><img src="/images/items/<%= item.id %>.png" alt="item_image"></figure>
-      <div class="bl_item_text">
-        <h3 class="bl_item_text_ttl"><%= item.title %></h3>
-        <h3 class="bl_item_text_ttl"><%= item.type %></h3>
-        <p class="bl_item_text_reputation"><span id="js_star"></span><%= item.rep_count %>個の評価</p>
-        <!-- start content -->
-        <div class="bl_item_text_content">
-          <p>ポートフォリを第1作目です。</p>
-        </div>
-        <!-- end content -->
-        <!-- start item.description -->
-        <div class="bl_item_text_description">
-          <p>ポートフォリを第1作目です。</p>
-          <p>タイ文字をドラッグすると意味と発音を表示します。</p>
-          <p>辞書機能にはタイ語に特化したサイト<a href="https://www.gotthai.net/">ごったい</a>を使用させてもらっています。</p>
-          <p>タイ語を勉強していた頃、こういうのがあればいいなと思ってたので作りました。</p>
-          <p>毎日20人程度の方に利用していただいています。</p>
-        </div>
-        <!-- end item.description -->
-      </div>
-      <div class="bl_buyBox">
-        <p>値段 N <%= item.price %></p>
-        <p>在庫あり</p>
-        <button onclick="addBasketData('<%= item.id %>')">カートに入れる</button>
-      </div>
-    </div>
-  </main>
+    <section class="ly_section">
+      <div class="bl_media bl_item">
+        <figure class="bl_item_img"><img src="/images/items/<%= item.id %>.png" alt="item_image"></figure>
+        <div class="bl_item_text">
+          <h3 class="bl_item_text_ttl"><%= item.title %></h3>
+          <h3 class="bl_item_text_ttl"><%= item.type %></h3>
+          <p class="bl_item_text_reputation">
+            <span class="el_fiveStar" id="js_reputation">
+              <%- item.starHtml %>
+            </span>
+            <span id="js_reputation_count">
+              <%= item.rep_count %>個の評価
+            </span>
+          </p>
+          <p class="bl_item_text_reputation">
+            <span class="el_fiveStar el_fiveStar_self" id="js_myReputation">
+              <%- item.myStarHtml %>
+            </span>
+            あなたの評価
+          </p>
 
+
+          <% if(isPurchased) { %>
+          <div class="bl_item_text_content">
+            <%- item.content %>
+          </div>
+          <% } %>
+          <div class="bl_item_text_description">
+            <p>ポートフォリを第1作目です。</p>
+            <p>タイ文字をドラッグすると意味と発音を表示します。</p>
+            <p>辞書機能にはタイ語に特化したサイト<a href="https://www.gotthai.net/">ごったい</a>を使用させてもらっています。</p>
+            <p>タイ語を勉強していた頃、こういうのがあればいいなと思ってたので作りました。</p>
+            <p>毎日20人程度の方に利用していただいています。</p>
+          </div>
+        </div>
+        <div class="bl_buyBox">
+          <p class="hp_centering">値段<img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss"><%= item.price %></p>
+          <p>在庫あり</p>
+          <button onclick="addBasketData('<%= item.id %>')">カートに入れる</button>
+        </div>
+      </div>
+    </section>
+  </main>
   <%- include('./partial/footer') %>
-  
-  <script>
-    const $star = document.getElementById('js_star');
-    const $fullStar = '<svg class="el_chatInput_myIcon"><use xlink:href="/images/statics/stars.svg#full"></svg>';
-    const $halfStar = '<svg class="el_chatInput_myIcon"><use xlink:href="/images/statics/stars.svg#half"></svg>';
-    const $borderStar = '<svg class="el_chatInput_myIcon"><use xlink:href="/images/statics/stars.svg#border"></svg>';
-    $star.innerHTML = $fullStar.repeat(<%= item.fullStarCount %>) + $halfStar.repeat(<%= item.halfStarCount %>) + $borderStar.repeat(<%= item.borderStarCount %>);
-    
-  </script>
 </body>
 </html>
