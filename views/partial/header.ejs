@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg" href="/images/icons/iconsBackup/19.svg">
@@ -11,21 +13,34 @@
 </head>
 <body>
 <header id="js_header" class="ly_header">
+
+
+
+  <% ss.topicPath = [{'/': 'トップ'}, {'/item/view/app': '作ったもの'}, {'here': 'ことばフィルター'}]; %>
+  <% for(let obj of ss.topicPath) { %>
+  <% let k = Object.keys(obj); %>
+    <% if(k == 'here') { %>
+      <%= obj[k] %>
+    <% } else { %>
+      <a href="<%= k %>"><%= obj[k] %> > </a>
+    <% } %>
+  <% } %>
+
   <!-- header content 1 -->
-  <a href="http://localhost:3000/">
-    <div class="un_logo">
+  <!-- <a href="http://localhost:3000/"> -->
+    <!-- <div class="un_logo"> -->
     <!-- <img src="/images/statics/logo.png" alt="site_logo"> -->
-      <p>にし</p>
-    </div>
-  </a>
+      <!-- <p>にし</p> -->
+    <!-- </div> -->
+  <!-- </a> -->
     <!-- header content 2 -->
   <!-- <div class="bl_chatInput"> -->
     <form class="bl_chatInput">
-    <p>弾幕</p>
     <input type="text" class="el_input_text bl_chatInput_name" id="js_chatInput_name" value="<%= ss.name %>">
     <input type="text" class="el_input_text bl_chatInput_msg" id="js_chatInput_msg" placeholder="Message" autocomplete="off">
     <button class="el_btn bl_chatInput_sbm" id="js_chatInput_sbm"><img src="/images/icons/send.svg"></button>
     <svg class="el_chatInput_icon hp_icon_m" id="js_myIcon"><use xlink:href="/images/icons/defs.svg#<%= ss.icon %>"></svg>
+    <p class="bl_chatInput_random" id="js_tekito">テキトー入力</p>
     </form>
   <!-- </div> -->
   <!-- header content 3 -->

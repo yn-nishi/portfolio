@@ -1,24 +1,40 @@
-  <%- include('./partial/header', { ss: ss }) %>
+  <%- include('./partial/header', { ss }) %>
   <main>
-    <section class="ly_section">
       <% for(let item of items) { %>
-      <div class="bl_media bl_item">
-        <figure class="bl_item_img"><img src="/images/items/<%= item.id %>.png" alt="item_image"></figure>
-        <div class="bl_item_text">
-          <h3 class="bl_item_text_ttl"><%= item.title %></h3>
-          <p class="bl_item_text_reputation"><span class="fiveStar"><%- item.starHtml %></span><%= item.rep_count %>個の評価</p>
-          <p class="hp_centering"><img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss"><%= item.price %></p>
-          <h3 class="bl_item_text_ttl"><%= item.type %></h3>
-          <p><%= item.description %></p>
+        <section class="ly_section">
+      <div class="bl_item">
+        <div class="bl_item_inner">
+          <a href="/item/<%= item.id %>">
+              <figure class="bl_item_imgWrapper">
+                <img src="/images/items/<%= item.idStr %>.png" alt="item_image">
+              </figure>
+            <% if(item.isPurchased === true) { %>
+              <div class="hp_centering hp_justify_center hp_marginTop_10">
+                <img src="/images/icons/check.svg">
+                購入済み
+            </div>
+            <% } %>
+          </a>
+
+          <div class="bl_item_text">
+            <h3 class="bl_item_text_title"><a href="/item/<%= item.id %>"><%= item.title %></a></h3>
+            <p class="bl_item_text_reputation hp_centering">
+              <span class="el_fiveStar">
+                <%- item.starHtml %>
+              </span>
+              <%= item.rep_count %>個の評価</p>
+            <p class="hp_centering"><img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss"><%= item.price %></p>
+            <h3 class="bl_item_text_type"><%= item.type %></h3>
+            <!-- <p><%= item.outline %></p> -->
+            <p class="bl_item_text_outline">ドラッグするだけで辞書が引けるタイ語に特化したブラウザ拡張機能です。あああああいいいい</p>
+          </div>
         </div>
       </div>
-      <% } %>
     </section>
+      <% } %>
   </main>
   <%- include('./partial/footer') %>
 </body>
 </html>
-
-
 <%// if(isPurchased) { %>
   <%// } %>

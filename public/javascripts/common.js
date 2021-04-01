@@ -131,10 +131,14 @@ async function submitChat(e) {
   return false;
 }
 // チャット受信
-socket.on("s2c", (data) => {
+socket.on("s2c", async (data) => {
+  // チャットログhtml取得・更新
   if(document.getElementById('js_chatView') !== null) {
-    document.getElementById('js_chatView').innerHTML = data['html'];
+    let data = await fetch('/chatLoad', { method: 'POST', credentials: 'same-origin' });
+    data = await data.text();
+    document.getElementById('js_chatView').innerHTML = data;
   }
+  // 弾幕
   const $barrage = document.createElement('div');
   $barrage.className = 'un_barrage';
   $barrage.textContent = data['msg'];

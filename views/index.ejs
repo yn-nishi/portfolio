@@ -1,10 +1,13 @@
-<%- include('./partial/header', { ss }) %>
+<%- include('./partial/header') %>
+
 <main id="js_main" class="ly_main">
   <section class="ly_section">
-    <h2 class="el_h2">ここはどこ？</h2>
+    <h2 class="el_h2"><span>ここはなに？</span></h2>
     <div class="bl_mediaUnit bl_mediaUnit2">
-      <div class="bl_media">
-        <div class="bl_media_imgWrapper"><img src="/images/statics/greeting.png" alt="welcome_image"></div>
+      <div class="bl_media bl_media_welcome">
+        <!-- <div class="bl_media_imgWrapper">
+          <img src="/images/statics/greeting.png" alt="welcome_image">
+        </div> -->
         <div class="bl_media_text">
           <p>ここはなんちゃってショッピングができるポートフォリオサイトです。</p>
           <p>弾幕チャットをするとお金が増えます。</p>
@@ -15,23 +18,46 @@
         <%- include('./partial/chatView', { chatLog, ss })  %>
           </div>
         </div>
-      </div> <!-- /.bl_media .bl_chatView -->
-    </div> <!-- /.bl_mediaUnit .bl_mediaUnit2" -->
+      </div> <!-- end .bl_media .bl_chatView -->
+    </div> <!-- end .bl_mediaUnit .bl_mediaUnit2" -->
   </section>
   <section class="ly_section">
     <h2 class="el_h2">販売品</h2>
-    <div class="bl_cardUnit bi_cardUnit3">
+    <div class="bl_cardUnit bl_cardUnit3">
       <div class="bl_card">
-        <figure class="bl_card_imgWrapper"><img src="/images/statics/app.svg" alt="app_image" style="width: 200px;"></figure>
-        <h3 class="bl_card_ttl">作ったものとか</h3>
+        <figure class="bl_card_imgWrapper">
+          <a href="./item/view/app">
+            <img src="/images/statics/app.svg" alt="app">
+          </a>
+        </figure>
+        <a href="./item/view/app" class="hp_linkText">
+          <div class="bl_card_title">
+            <img src="/images/icons/app.svg">
+            <h3>作ったものとか</h3>
+          </div>
+        </a>
       </div>
       <div class="bl_card">
-        <figure class="bl_card_imgWrapper"><img src="/images/statics/personnel.svg" alt="personnel_image" style="width: 200px;"></figure>
-        <h3 class="bl_card_ttl">個人情報</h3>
+        <figure class="bl_card_imgWrapper">
+          <a href="./item/view/personnel">
+            <img src="/images/statics/personnel.svg" alt="personnel">
+          </a>
+        </figure>
+        <div class="bl_card_title">
+          <img src="/images/icons/personnel.svg">
+          <h3>個人情報</h3>
+        </div>
       </div>
       <div class="bl_card">
-        <figure class="bl_card_imgWrapper"><img src="/images/statics/waste.svg" alt="waste_image" style="width: 200px;"></figure>
-        <h3 class="bl_card_ttl">無駄遣い</h3>
+        <figure class="bl_card_imgWrapper">
+          <a href="./item/view/waste">
+            <img src="/images/statics/waste.svg" alt="waste">
+          </a>
+        </figure>
+        <div class="bl_card_title">
+          <img src="/images/icons/waste.svg">
+          <h3>無駄遣い</h3>
+        </div>
       </div>
     </div>
   </section>
@@ -39,15 +65,27 @@
     <h2 class="el_h2">購入済み</h2>
       <%# 購入済みアイテムを1行あたり5個ずつ表示 %>
       <div class="bl_cardUnit bl_cardUnit5">
-      <% for(let i = 0; i < items.length; ++i) { %>
-        <% if(i % 5 === 0) { %>
+      <% for(var i = 0; i < items.length; ++i) { %>
+        <% if(i % 5 === 0 && i !== 0) { %>
           </div>
           <div class="bl_cardUnit bl_cardUnit5">
         <% } %>
-        <div class="bl_card">
-          <figure class="bl_card_imgWrapper"><img src="/images/items/01.png" alt=""></figure>
-          <h3 class="bl_card_ttl bl_card_ttl__sm"><%=items[i]['title'] %></h3>
-        </div>
+        <a href="/item/<%= items[i]['id'] %>">
+          <div class="bl_card">
+            <figure class="bl_card_imgWrapper">
+              <% items[i]['idStr'] = ('00' + items[i]['id']).slice(-2); %>
+              <img src="/images/items/<%= items[i]['idStr'] %>.png">
+            </figure>
+            <h3 class="bl_card_ttl bl_card_ttl__sm"><%=items[i]['title'] %></h3>
+          </div>
+        </a>
+        <% } %>
+      <% while(i % 5 !== 0) { %>
+        <div class="bl_card hp_dummyBox"></div>
+        <% ++i %>
+      <% }%>
+      <% if(Object.keys(items).length == 0) { %>
+        <p>現在、購入済みのアイテムはありません。</p>
       <% } %>
     </div>
   </section>

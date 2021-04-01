@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../lib/db');
+const common = require('../lib/const.js');
 
 router.get('/', function(req, res) {
   const ss = req.session;
@@ -16,14 +17,15 @@ router.get('/view/:category', async (req, res) => {
   const ss = req.session;
   const category = req.params.category;
   let qr = '';
-  qr = 'SELECT * FROM Items WHERE category = $1';
-  const items = await db.any(qr, ['app']);
+  qr = 'SELECT * FROM Items WHERE category = $1 ORDER BY id';
+  const items = await db.any(qr, [category]);
   for(let i = 0; i < items.length; ++i) {
-    items[i]['description'] = truncateString(items[i]['description'], 50)
     items[i]['price'] = items[i]['price'].toLocaleString();
     items[i]['starHtml'] = generateStarHtml(items[i].reputation);
+    items[i]['idStr'] = ('00' + items[i]['id']).slice(-2);
+    items[i]['isPurchased'] =  items[i]['id'] in ss.repository;
   }
-  res.render('itemView', { items, ss });
+  res.render('itemView', { common, ss, items });
 });
 
 
@@ -35,11 +37,11 @@ router.get('/:id', async (req, res) => {
   const isPurchased =  id in ss.repository;
   qr = 'SELECT * FROM Items WHERE id = $1';
   const item = await db.one(qr, [id]);
-  item.id = ('00' + item.id).slice(-2);
+  item.idStr = ('00' + item.id).slice(-2);
   item.price = item.price.toLocaleString();
   item.starHtml = generateStarHtml(item.reputation);
   item.myStarHtml = generateMyStarHtml(id, ss.review[id]);
-  res.render('item', { ss, item, isPurchased });
+  res.render('item', { common, ss, item, isPurchased });
 });
 
 
@@ -72,15 +74,6 @@ router.post('/appraise', async (req, res) => {
   const myStarHtml = generateMyStarHtml(id, ss.review[id]);
   res.json({ reputation, rep_count, starHtml, myStarHtml })
 });
-
-// 文字切り捨て
-function truncateString(str, num) {
-  if (str.length <= num) {
-    return str;
-  } else {
-    return str.slice(0, num > 3 ? num - 3 : num) + '...';
-  }
-}
 
 // みんなの評価の星html
 function generateStarHtml(reputation) {

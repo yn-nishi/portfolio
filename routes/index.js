@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../lib/db');
+const common = require('../lib/const.js');
+
 
 router.get ('/', async (req, res) => {
   const ss = req.session;
@@ -12,8 +14,8 @@ router.get ('/', async (req, res) => {
     items = await db.any(qr, [itemIds]);
   }
   qr = 'SELECT * FROM Chat ORDER BY posted_at DESC';
-  const chatLog = await db.many(qr);
-  res.render('index', { ss, chatLog, items });
+  const chatLog = await db.any(qr);
+  res.render('index', { common, ss, chatLog, items });
 });
 
 module.exports = router;

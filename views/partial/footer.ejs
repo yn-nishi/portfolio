@@ -1,11 +1,18 @@
 <footer id="js_footer">
   <div class="bl_footer">
-    <p>footer message</p>
+    <p>
+      <a href="#" class="hp_linkText">TOP PAGE</a>
+    </p>
+    <p class="bl_footer_material hp_font_ss">素材元<br>
+      <a href="https://kage-design.com/" class="hp_linkText">SILHOUETTE DESIGN</a><br>
+      <a href="https://iconsvg.xyz/" class="hp_linkText">ICONSVG</a><br>
+      <a href="https://hatchful.shopify.com/ja/" class="hp_linkText">HATCHFUL</a>
+    </p>
   </div>
 </footer>
 <!-- アイコン選択窓 -->
 <div class="un_pickIcon" id="js_pickIcon">
-  <% for(let icon of ss.iconArray) { %>
+  <% for(let icon of common.iconAry) { %>
     <svg class="hp_icon_l" onclick="setMyIcon('<%= icon %>')"><use xlink:href="/images/icons/defs.svg#<%= icon %>"></svg>
   <% } %>
 </div>
