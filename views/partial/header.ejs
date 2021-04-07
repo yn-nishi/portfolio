@@ -2,56 +2,56 @@
 <html lang="ja">
 <head>
   <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg" href="/images/icons/iconsBackup/19.svg">
+  <link rel="icon" type="image/svg+xml" href="/images/icons/favicon.svg">
   <link rel='stylesheet' href='/stylesheets/reset.css'>
   <link rel='stylesheet' href='/stylesheets/style.css'>
   <link rel='stylesheet' href='/stylesheets/micromodal.css'>
-  <title>Document</title>
+  <title>にしのポートフォリオ</title>
 </head>
 <body>
-<header id="js_header" class="ly_header">
-
-
-
-  <% ss.topicPath = [{'/': 'トップ'}, {'/item/view/app': '作ったもの'}, {'here': 'ことばフィルター'}]; %>
-  <% for(let obj of ss.topicPath) { %>
-  <% let k = Object.keys(obj); %>
-    <% if(k == 'here') { %>
-      <%= obj[k] %>
+  <header id="js_header" class="ly_header">
+    <!-- header content 1 -->
+    <p class=" hp_font_s el_path_header">
+    <% if(ss.path.length > 0) { %>
+      <% for(let obj of ss.path) { %>
+        <% let k = Object.keys(obj); %>
+        <% if(k == 'here') { %>
+          <%= obj[k] %>
+        <% } else { %>
+          <a href="<%= k %>" class="hp_linkText"><%= obj[k] %></a><img src="/images/icons/chevron_r.svg" class="hp_icon_ss">
+        <% } %>
+      <% } %>
     <% } else { %>
-      <a href="<%= k %>"><%= obj[k] %> > </a>
+      こんにちは<span id="js_myName"><%= ss.name %></span>さん
     <% } %>
-  <% } %>
-
-  <!-- header content 1 -->
-  <!-- <a href="http://localhost:3000/"> -->
-    <!-- <div class="un_logo"> -->
-    <!-- <img src="/images/statics/logo.png" alt="site_logo"> -->
-      <!-- <p>にし</p> -->
-    <!-- </div> -->
-  <!-- </a> -->
-    <!-- header content 2 -->
-  <!-- <div class="bl_chatInput"> -->
-    <form class="bl_chatInput">
-    <input type="text" class="el_input_text bl_chatInput_name" id="js_chatInput_name" value="<%= ss.name %>">
-    <input type="text" class="el_input_text bl_chatInput_msg" id="js_chatInput_msg" placeholder="Message" autocomplete="off">
-    <button class="el_btn bl_chatInput_sbm" id="js_chatInput_sbm"><img src="/images/icons/send.svg"></button>
-    <svg class="el_chatInput_icon hp_icon_m" id="js_myIcon"><use xlink:href="/images/icons/defs.svg#<%= ss.icon %>"></svg>
-    <p class="bl_chatInput_random" id="js_tekito">テキトー入力</p>
-    </form>
-  <!-- </div> -->
-  <!-- header content 3 -->
-  <div class="bl_shopping">
+    </p>
+  <!-- header content 2 -->
+  <div class="bl_shopping" style="float: right;">
     <div class="bl_shopping_balance">
-      <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_s">
-      <span id="js_balance"><%= ss.balance.toLocaleString('ja-JP') %></span>
+      <img src="/images/icons/coin.svg" alt="Nコイン" class="hp_icon_s hp_marginRight_5">
+      <span id="js_balance" style="margin-left: 1px;"><%= ss.balance.toLocaleString('ja-JP') %></span>
     </div>
     <div class="bl_shopping_basket" onclick="showModal('1')">
       <img src="/images/icons/basket.svg" class="hp_icon_m">
       <span id="js_itemQty"><%= ss.itemQty %></span>
     </div>
+  </div>
+  <!-- header content 3 -->
+  <div class="bl_chatInput">
+    <form class="bl_chatInput_inner">
+      <!-- <div class="hp_centering"> -->
+        <input type="text" class="el_input_text bl_chatInput_name" id="js_chatInput_name" value="<%= ss.name %>">
+        <input type="text" class="el_input_text bl_chatInput_msg" id="js_chatInput_msg" placeholder="Message" autocomplete="off">
+      <!-- </div> -->
+      <div class="hp_centering chatInput_buttons">
+        <button class="bl_chatInput_sbm" id="js_chatInput_sbm">
+        <img src="/images/icons/send.svg"></button>
+        <svg class="el_chatInput_icon" id="js_myIcon"><use xlink:href="/images/icons/defs.svg#<%= ss.icon %>"></svg>
+        <p class="bl_chatInput_random" onclick="random()">自動入力</p>
+      </div>
+    </form>
   </div>
 </header>

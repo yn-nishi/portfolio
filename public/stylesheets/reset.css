@@ -89,3 +89,7 @@ input, select {
 *, *::before, *::after {
     box-sizing: border-box;
 }
+
+input button {
+  outline: 0;
+}

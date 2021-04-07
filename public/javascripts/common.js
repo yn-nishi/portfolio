@@ -1,31 +1,41 @@
 //// Copyright 2021 yn_nishi All Rights Reserved.
-//Javascript共通ファイル
+// 全ページ共通ファイル
 
+// 画面サイズ振り分け
+let size = 'nomal';
+if (window.matchMedia && window.matchMedia('(max-device-width: 1000px)').matches) {
+  size = 'small';
+}
 // モーダルセットアップ
-document.addEventListener('load', ()=>{
-  MicroModal.init({
+window.addEventListener('load', ()=>{
+  MicroModal.init({});
+},false);
+
+// モーダルopen
+async function showModal(modalId) {
+  document.getElementById('modal-1-title').textContent = 'カートの中身';
+  getBasketData();
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  MicroModal.show('modal-' + modalId, {
     disableScroll: true,
     awaitOpenAnimation: true,
     awaitCloseAnimation: true,
     disableFocus: true
   });
-},false);
-
-// モーダルopen
-async function showModal(modalId) {
-  getBasketData();
-  await new Promise((resolve) => setTimeout(resolve, 200));
-  MicroModal.show('modal-' + modalId);
 }
 
 // 買い物かごに入っているアイテムのHTMLを取得してモーダルに反映
 async function getBasketData() {
-  let data = await fetch('/basket/show', { method: 'POST' });
+  let data = await fetch('/basket/show', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    credentials: 'same-origin',
+    body: JSON.stringify({ size })
+  });
   if(data.ok) {
     data = await data.json();
     document.getElementById('modal-1-content').innerHTML = data['html'];
     document.getElementById('js_itemQty').textContent = data['ss']['itemQty'];
-    document.getElementById('modal-1-title').textContent = '購入完了';
   }
 }
 
@@ -46,7 +56,7 @@ async function changeQty(id, mathType) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
     credentials: 'same-origin',
-    body: JSON.stringify({ id, mathType })
+    body: JSON.stringify({ id, mathType, size })
   });
   data = await data.json();
   document.getElementById('modal-1-content').innerHTML = data.html;
@@ -56,12 +66,13 @@ async function changeQty(id, mathType) {
 // 購入処理
 async function payment() {
   let data = await fetch('/basket/payment', { method: 'POST' });
+  if(data.ok) {
+    document.getElementById('modal-1-title').textContent = '購入完了';
+  }
   data = await data.json();
   document.getElementById('modal-1-content').innerHTML = data.html;
   document.getElementById('js_itemQty').textContent = data.ss.itemQty;
-
 }
-
 
 // アイコン関係
 const $pickIconWin = document.getElementById('js_pickIcon');
@@ -128,6 +139,9 @@ async function submitChat(e) {
   data = await data.json();
   moko(data);
   $balance.textContent = data.ss.balance.toLocaleString('ja-JP');
+  if(document.getElementById('js_myName') !== null) {
+    document.getElementById('js_myName').textContent = $name.value;
+  }
   return false;
 }
 // チャット受信
@@ -160,6 +174,13 @@ socket.on("s2c", async (data) => {
   }, 10);
 });
 
+async function random() {
+  let data = await fetch('/random', { method: 'POST' });
+  if(data.ok) {
+    data = await data.json();
+    $msg.value = data.comment;
+  }
+}
 // お金が増える時のもこもこ
 function moko(data) {
   document.body.insertAdjacentHTML('beforeend', data.html);
@@ -199,15 +220,3 @@ async function appraise(review) {
   
   return false;
 }
-
-
-
-
-// document.getElementById('js_home').href = location.protocol + '//' + location.host;
-
-// console.log('Location.origin',Location.origin);
-// console.log('Location.username',Location.username);
-// console.log('location.protocol',location.protocol);
-// console.log('Location.href',Location.href);
-// console.log('location.port',location.port);
-// console.log('location.host',location.host);

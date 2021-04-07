@@ -2,10 +2,6 @@
 /**************************\
   Basic Modal Styles
 \**************************/
-.modal {
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
-}
-
 .modal__overlay {
   position: fixed;
   top: 0;
@@ -22,10 +18,8 @@
 .modal__container {
   background-color: #fff;
   padding: 30px;
-  max-width: 70vw;
+  max-width: 100vw;
   max-height: 80vh;
-  /* max-width: 100vw;
-  max-height: 100vh; */
   border-radius: 4px;
   overflow-y: auto;
   box-sizing: border-box;
@@ -51,6 +45,8 @@
   background: #f0ece7;
   border-radius: 3px;
   border: 0;
+  min-width: 22px;
+  min-height: 22px;
   cursor: pointer;
 }
 
@@ -59,9 +55,7 @@
 }
 
 .modal__content {
-  /* background-color: lightgoldenrodyellow; */
   margin-top: 1rem;
-  /* margin-bottom: 2rem; */
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.8);
 }
@@ -135,8 +129,6 @@
  * -------------------------------- */
 .bl_basketTable {
   display: table;
-  /* border-bottom: 1px solid gray; */
-  /* width:700px; */
 }
 
 .el_row {
@@ -153,7 +145,6 @@
 
 .el_row:last-of-type > .el_cell {
   border-bottom: 1px solid #aaa;
-  /* background-color: lightsalmon; */
 }
 
 .el_row.el_row_noBorder > .el_cell {
@@ -161,7 +152,6 @@
 }
 
 .bl_basketTable_name {
-  /* background-color: lightgreen; */
   display: flex;
   align-items: center;
 }
@@ -177,7 +167,6 @@
 }
 
 .el_btn_qty {
-  /* display: inline-block; */
   vertical-align: middle;
   margin: 0 5px;
   border: none;
@@ -187,11 +176,11 @@
 }
 
 .hp_btn_plus {
-  background: url("/images/icons/plus.svg") no-repeat center/10px #ddd;
+  background: url("/images/icons/plus.svg") no-repeat center/10px #f5f5f5;
 }
 
 .hp_btn_minus {
-  background: url("/images/icons/minus.svg") no-repeat center/10px #ddd;
+  background: url("/images/icons/minus.svg") no-repeat center/10px #f5f5f5;
 }
 
 .bl_basketCalc {
@@ -204,7 +193,6 @@
 .el_cell_flex {
   display: flex;
   align-items: center;
-  /* justify-content: flex-end; */
 }
 
 .modal__footer {
@@ -217,6 +205,15 @@
   box-shadow: 1px 1px 2px #aaa;
   padding: 0.5rem 1.5rem;
 }
+@media screen and (max-width: 1000px) {
+  .modal__footer > .el_btn {
+    display: block;
+    margin-top: 20px;
+    box-shadow: 1px 1px 2px #aaa;
+    padding: 0.5rem 1.5rem;
+    width: 100%;
+  }
+}
 
 .el_btn_purchase {
   background-color: #3e62ad;
@@ -225,4 +222,50 @@
 .el_btn_purchase:disabled {
   background-color: #aaa;
   cursor: default;
+}
+
+/* --------------------------------
+ * スマホ用
+ * -------------------------------- */
+.bl_basketS_inner {
+  padding: 10px;
+  border-top: 1px solid #aaa;
+}
+.bl_basketS .bl_basketS_inner:last-child {
+  border-bottom: 1px solid #aaa;
+}
+.bl_basketS_media {
+  display: flex;
+  align-items: center;
+}
+.bl_basketS_media img {
+  display: block;
+  height: 60px;
+  width: 60px;
+}
+.bl_basketS_text {
+  margin-left: 10px;
+}
+.bl_basketS_change {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.bl_calcS {
+  margin-top: 10px;
+}
+.bl_calcS_inner {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.el_btn_bssketS {
+  display: block;
+  margin-top: 20px;
+  box-shadow: 1px 1px 2px #aaa;
+  padding: 0.5rem 1.5rem;
+  width: 100%;
 }

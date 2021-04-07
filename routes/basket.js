@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 router.post('/show', async (req, res) => {
   const ss = req.session;
   setItemQty(ss);
-  const basketTableHtml = await makeBasketTable(ss);
+  const basketTableHtml = await makeBasketTable(ss, req.body.size);
   res.json({ html: basketTableHtml, ss });
 });
 
@@ -35,10 +35,9 @@ router.post('/changeQty', async (req, res) => {
     ++ss.basket[id];
   } else if(mathType === 'minus' && ss.basket[id] > 0) {
     --ss.basket[id];
-    // 個数が0になったアイテムはapp.jsでkeyごと削除される
   }
   setItemQty(ss);
-  const basketTableHtml = await makeBasketTable(ss);
+  const basketTableHtml = await makeBasketTable(ss, req.body.size);
   res.json({ html: basketTableHtml, ss });
 });
 
@@ -47,11 +46,12 @@ router.post('/payment', async (req, res) => {
   const ss = req.session;
   let qr = '';
   let total = 0;
+  let itemsInfo
   const itemIds = Object.keys(ss.basket);
   // 購入金額計算
   if(itemIds.length > 0) {
     qr = 'SELECT * FROM Items WHERE id IN ($1:csv)';
-    let itemsInfo = await db.any(qr, [itemIds]);
+    itemsInfo = await db.any(qr, [itemIds]);
     for(let item of itemsInfo) {
       total += item.price * ss.basket[item.id];
     }
@@ -85,13 +85,13 @@ router.post('/payment', async (req, res) => {
   ss.basket = {};
   ss.balance -= total;
   ss.itemQty = 0;
-  app.render('./partial/basketPayment', {}, (err, html) => {
+  app.render('./partial/basketPayment', { ss, itemsInfo }, (err, html) => {
     res.json({ html, ss });
   });
 });
 
 // 買い物かごhtml生成
-async function makeBasketTable(ss) {
+async function makeBasketTable(ss, size) {
   const itemIds = Object.keys(ss.basket);
   let itemsInfo = [];
   let total = 0;
@@ -100,10 +100,13 @@ async function makeBasketTable(ss) {
     itemsInfo = await db.any(q, [itemIds]);
     for(let item of itemsInfo) {
       total += item.price * ss.basket[item.id];
+      item.idStr = ('00' + item['id']).slice(-2);
     }
   }
+  let ejs = './partial/basketTable';
+  if(size == 'small') { ejs = './partial/basketTableSmall'; }
   let basketTableHtml = '';
-  app.render('./partial/basketTable', { itemsInfo, ss, total },(err, html) => {
+  app.render(ejs, { itemsInfo, ss, total },(err, html) => {
     basketTableHtml = html;
   });
   return basketTableHtml;
@@ -116,18 +119,5 @@ function setItemQty(ss) {
     ss.itemQty = 0;
   }
 }
-
-
-// SQL実験場
-(async function() { 
-// let qr = 'SELECT purchased_items FROM Clients WHERE sid = $1';
-// is_purchased = true or false
-// qr = `(SELECT purchased_items ? '6' as is_purchased FROM Clients WHERE sid = 'aaa')`; // のちほど aaa を ss.id へ
-
-// qr = `(SELECT purchased_items FROM Clients WHERE sid = 'aaa')`; 
-// let data = await db.oneOrNone(qr);
-// console.log( data );
-// console.log( toString.call (data[0]['purchased_items']) );
-})();
 
 module.exports = router;

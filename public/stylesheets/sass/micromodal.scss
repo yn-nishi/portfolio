@@ -1,16 +1,12 @@
 
 $gray1: #f7f7f7;
 $gray2: #f0ece7;
-$gray3: #ddd;
+$gray3: #f5f5f5;
 $gray4: #aaa;
 $blue: #3e62ad;
 /**************************\
   Basic Modal Styles
 \**************************/
-
-.modal {
-  font-family: -apple-system,BlinkMacSystemFont,avenir next,avenir,helvetica neue,helvetica,ubuntu,roboto,noto,segoe ui,arial,sans-serif;
-}
 
 .modal__overlay {
   position: fixed;
@@ -28,14 +24,13 @@ $blue: #3e62ad;
 .modal__container {
   background-color: #fff;
   padding: 30px;
-  max-width: 70vw;
+  max-width: 100vw;
   max-height: 80vh;
-  /* max-width: 100vw;
-  max-height: 100vh; */
   border-radius: 4px;
   overflow-y: auto;
   box-sizing: border-box;
 }
+
 
 .modal__header {
   display: flex;
@@ -57,15 +52,15 @@ $blue: #3e62ad;
   background: $gray2;
   border-radius: 3px;
   border: 0;
+  min-width: 22px;
+  min-height: 22px;
   cursor: pointer;
 }
 
 .modal__header .modal__close:before { content: "\2715"; }
 
 .modal__content {
-  /* background-color: lightgoldenrodyellow; */
   margin-top: 1rem;
-  /* margin-bottom: 2rem; */
   line-height: 1.5;
   color: rgba(0,0,0,.8);
 }
@@ -124,15 +119,12 @@ $blue: #3e62ad;
   will-change: transform;
 }
 
-
 /* --------------------------------
  * Added By yn_nishi
  * -------------------------------- */
 
 .bl_basketTable {
   display: table;
-  /* border-bottom: 1px solid gray; */
-  /* width:700px; */
 }
 
 .el_row {
@@ -148,7 +140,6 @@ $blue: #3e62ad;
 }
 .el_row:last-of-type > .el_cell{
   border-bottom: 1px solid $gray4;
-  /* background-color: lightsalmon; */
 }
 
 .el_row.el_row_noBorder > .el_cell{
@@ -156,7 +147,6 @@ $blue: #3e62ad;
 }
 
 .bl_basketTable_name {
-  /* background-color: lightgreen; */
   display: flex;
   align-items: center;
 }
@@ -171,7 +161,6 @@ $blue: #3e62ad;
   text-align: left;
 }
 .el_btn_qty {
-  /* display: inline-block; */
   vertical-align: middle;
   margin: 0 5px;
   border: none;
@@ -196,7 +185,6 @@ $blue: #3e62ad;
 .el_cell_flex {
   display: flex;
   align-items: center;
-  /* justify-content: flex-end; */
 }
 
 
@@ -209,6 +197,13 @@ $blue: #3e62ad;
   margin-right: 1rem;
   box-shadow: 1px 1px 2px #aaa;
   padding: 0.5rem 1.5rem;
+  @media screen and(max-width: 1000px) {
+    display: block;
+    margin-top: 20px;
+    box-shadow: 1px 1px 2px $gray4;
+    padding: 0.5rem 1.5rem;
+    width: 100%;
+  }
 }
 
 .el_btn_purchase {
@@ -218,4 +213,54 @@ $blue: #3e62ad;
     background-color: $gray4;
     cursor: default;
   }
+}
+
+
+/* --------------------------------
+ * スマホ用
+ * -------------------------------- */
+.bl_basketS {
+  &_inner {
+    padding: 10px;
+    border-top: 1px solid $gray4;
+  }
+  & &_inner:last-child{
+    border-bottom: 1px solid $gray4;
+  }
+  &_media {
+    display: flex;
+    align-items: center;
+    img {
+      display: block;
+      height: 60px;
+      width: 60px;
+    }
+  }
+  &_text {
+    margin-left: 10px;
+  }
+  &_change {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+}
+
+.bl_calcS {
+  margin-top: 10px;
+  &_inner {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+  }
+}
+
+.el_btn_bssketS {
+  display: block;
+  margin-top: 20px;
+  box-shadow: 1px 1px 2px $gray4;
+  padding: 0.5rem 1.5rem;
+  width: 100%;
 }

@@ -1,37 +1,64 @@
   <%- include('./partial/header', { ss }) %>
   <main>
-      <% for(let item of items) { %>
-        <section class="ly_section">
+    <% let i = 0; %>
+    <% for(let item of items) { %>
+    <section class="ly_section">
+      <% if(i == 0) { %>
+        <h2 class="el_h2 hp_centering_inline">
+          <svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#<%= item.category %>"></svg>
+          <%= common.e2j[item.category] %>
+        </h2>
+        <% ++i %>
+      <% } %>
       <div class="bl_item">
         <div class="bl_item_inner">
           <a href="/item/<%= item.id %>">
-              <figure class="bl_item_imgWrapper">
-                <img src="/images/items/<%= item.idStr %>.png" alt="item_image">
-              </figure>
+            <figure class="bl_item_imgWrapper hp_linkImg_parent hp_shadowHover">
+              <img src="/images/items/<%= item.idStr %>.png" alt="item_image" class="hp_linkImg">
+            </figure>
             <% if(item.isPurchased === true) { %>
-              <div class="hp_centering hp_justify_center hp_marginTop_10">
-                <img src="/images/icons/check.svg">
-                購入済み
+            <div class="el_purchasedMark hp_centering hp_marginTop_10 hp_font_yellow">
+              <img src="/images/icons/check.svg">
+              購入済み
             </div>
             <% } %>
           </a>
-
           <div class="bl_item_text">
-            <h3 class="bl_item_text_title"><a href="/item/<%= item.id %>"><%= item.title %></a></h3>
+            <h3 class="bl_item_text_title"><a href="/item/<%= item.id %>" class="hp_linkText"><%= item.title %></a></h3>
             <p class="bl_item_text_reputation hp_centering">
               <span class="el_fiveStar">
                 <%- item.starHtml %>
               </span>
-              <%= item.rep_count %>個の評価</p>
-            <p class="hp_centering"><img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss"><%= item.price %></p>
+              <%= item.rep_count %>個の評価
+            </p>
+            <p class="hp_centering bl_item_price"><img src="/images/icons/coin.svg" alt="Nコイン" class="hp_marginRight_5 hp_icon_ss"><%= item.price %></p>
             <h3 class="bl_item_text_type"><%= item.type %></h3>
-            <!-- <p><%= item.outline %></p> -->
-            <p class="bl_item_text_outline">ドラッグするだけで辞書が引けるタイ語に特化したブラウザ拡張機能です。あああああいいいい</p>
+            <div class="bl_item_text_outline"><%- item.outline %></div>
           </div>
         </div>
       </div>
     </section>
-      <% } %>
+    <% } %>
+
+    <section class="ly_section">
+      <% let nav = ''; %>
+      <%
+      nav += items[0]['category'] == 'app' ?
+        '<span class="hp_marginRight_20"><svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#app"></svg>作ったもの</span>' :
+        '<span class="hp_linkText hp_marginRight_20"><a href="/item/app"><svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#app"></svg>作ったもの</a></span>';
+      nav += items[0]['category'] == 'personnel' ?
+        '<span class="hp_marginRight_20"><svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#personnel"></svg>個人情報</span>' :
+        '<span class="hp_linkText hp_marginRight_20"><a href="/item/personnel"><svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#personnel"></svg>個人情報</a></span>';
+      nav += items[0]['category'] == 'waste' ?
+        '<span class="hp_marginRight_20"><svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#waste"></svg>無駄遣い</span>' :
+        '<span class="hp_linkText hp_marginRight_20"><a href="/item/waste"><svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#waste"></svg>無駄遣い</a></span>';
+      %>
+      <div class="bl_item_nav">
+        <h2 class="el_h2">
+          <%- nav %>
+        </h2>
+      </div>
+    </section>
   </main>
   <%- include('./partial/footer') %>
 </body>

@@ -1,9 +1,10 @@
 {
-  "name": "portfolio site",
+  "name": "portfolio",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon -e ejs,js ./bin/www",
+    "start": "node ./bin/www",
+    "nodemon": "nodemon -e ejs,js ./bin/www",
     "sass": "npx sass ./public/stylesheets/sass/:./public/stylesheets/ --watch --no-source-map"
   },
   "dependencies": {

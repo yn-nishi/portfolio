@@ -197,7 +197,6 @@
         value: function scrollBehaviour(toggle) {
           if (!this.config.disableScroll) return;
           var body = document.querySelector('body');
-
           switch (toggle) {
             case 'enable':
               Object.assign(body.style, {

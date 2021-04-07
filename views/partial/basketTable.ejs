@@ -14,7 +14,7 @@
       <% if(ss.basket[item.id] > 0) { %>
         <div class="el_row"> 
           <div class="el_cell bl_basketTable_name">
-            <img src="/images/items/01.png" class="bl_basketTable_name_img">
+            <img src="/images/items/<%= item.idStr %>.png" class="bl_basketTable_name_img">
             <div class="bl_basketTable_name_text">
               <p class="bl_basketTable_name_title"><%= item.title %></p>
               <p class="bl_basketTable_name_type"><%= item.type %></p>
@@ -35,7 +35,7 @@
       <% } else { // 個数が0のアイテム %>
         <div class="el_row">
           <div class="el_cell bl_basketTable_name">
-            <img src="/images/items/01.png" class="bl_basketTable_name_img">
+            <img src="/images/items/<%= item.idStr %>.png" class="bl_basketTable_name_img">
             <div class="bl_basketTable_name_text">
               <p class="bl_basketTable_name_title"><%= item.title %></p>
               <p class="bl_basketTable_name_type"><%= item.type %></p>
@@ -57,7 +57,7 @@
         <div class="el_cell"></div>
         <div class="el_cell"></div>
         <div class="el_cell el_cell_flex">
-          <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss">
+          <img src="/images/icons/coin.svg" class="el_coin hp_icon_ss hp_marginRight_5">
           <p>合計</p></div>
         <div class="el_cell">
           <p class="hp_font_red">-<%= total.toLocaleString() %></p>
@@ -67,7 +67,7 @@
         <div class="el_cell"></div>
         <div class="el_cell"></div>
         <div class="el_cell el_cell_flex">
-          <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss">
+          <img src="/images/icons/coin.svg" class="el_coin hp_icon_ss hp_marginRight_5">
           <p>所持金</p>
         </div>
         <div class="el_cell">
@@ -78,14 +78,14 @@
         <div class="el_cell"></div>
         <div class="el_cell"></div>
         <div class="el_cell el_cell_flex">
-          <img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss">
+          <img src="/images/icons/coin.svg" class="el_coin hp_icon_ss hp_marginRight_5">
           <p>購入後</p>
         </div>
         <div class="el_cell">
           <% if(ss.balance - total < 0) { %>
-            <p class="hp_font_red"><%= (ss.balance - total).toLocaleString() %></p>
+            <p class="hp_font_red"><%= (ss.balance - total).toLocaleString('ja-JP') %></p>
           <% } else { %>
-            <p><%= (ss.balance - total).toLocaleString() %></p>
+            <p><%= (ss.balance - total).toLocaleString('ja-JP') %></p>
             <% } %>
         </div>
       </div>
@@ -93,11 +93,9 @@
     <%# ⬆end 金額計算 %>
   </div>
   <!-- ⬆end table -->
- 
 <% } else { %>
   <p>何も入っていません。</p>
 <% } %>
-
 <%# アイテムが残っているとき %>
   <% if(total > 0) { %>
 <footer class="modal__footer">

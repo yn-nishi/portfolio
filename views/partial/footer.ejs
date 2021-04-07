@@ -1,7 +1,16 @@
 <footer id="js_footer">
   <div class="bl_footer">
-    <p>
-      <a href="#" class="hp_linkText">TOP PAGE</a>
+    <p class="hp_absoluteCenter hp_centering el_path_footer">
+      <% if(ss.path.length > 0) { %>
+        <% for(let obj of ss.path) { %>
+          <% let k = Object.keys(obj); %>
+          <% if(k == 'here') { %>
+            <%= obj[k] %>
+          <% } else { %>
+            <a href="<%= k %>" class="hp_linkText"><%= obj[k] %></a><img src="/images/icons/chevron_r.svg" class="hp_icon_ss">
+          <% } %>
+        <% } %>
+      <% } %>
     </p>
     <p class="bl_footer_material hp_font_ss">素材元<br>
       <a href="https://kage-design.com/" class="hp_linkText">SILHOUETTE DESIGN</a><br>
@@ -16,7 +25,6 @@
     <svg class="hp_icon_l" onclick="setMyIcon('<%= icon %>')"><use xlink:href="/images/icons/defs.svg#<%= icon %>"></svg>
   <% } %>
 </div>
-
 <!-- 買い物かご -->
 <%-// include('./micromodal') %>
 <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
@@ -31,8 +39,6 @@
     </div>
   </div>
 </div>
-
-
 <script src="/socket.io/socket.io.js"></script>
 <script src="/javascripts/micromodal.js"></script>
 <script src="/javascripts/common.js"></script>

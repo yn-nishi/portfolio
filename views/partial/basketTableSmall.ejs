@@ -1,0 +1,84 @@
+<% if(itemsInfo.length > 0) { %>
+  <div class="bl_basketS">
+  <% for(let item of itemsInfo) { %>
+        <div class="bl_basketS_inner">
+          <div class="bl_basketS_media">
+              <figure class="hp_linkImg_parent hp_shadowImg">
+                <img src="/images/items/<%= item.idStr %>.png" class="hp_linkImg">
+              </figure>
+            <div class="bl_basketS_text">
+              <p><a href="/item/<%= item.id %>" class="hp_linkText_simple"><%= item.title %></a></p>
+              <p class="hp_font_ss"><%= item.type %></p>
+            </div>
+          </div>
+          <div class="bl_basketS_change">
+            <% if(ss.basket[item.id] > 0) { %>
+              <div class="bl_basketS_qty hp_centering">
+                <button class="el_btn el_btn_qty hp_btn_minus" onclick="changeQty('<%= item.id %>', 'minus')"></button>
+                <span><%= ss.basket[item.id] %></span>
+                <button class="el_btn el_btn_qty hp_btn_plus" onclick="changeQty('<%= item.id %>', 'plus')"></button>
+              </div>
+              <div class="bl_basketS_subTotal">
+                <p class="hp_font_s hp_centering">
+                  <img src="/images/icons/coin.svg" class="hp_icon_ss hp_marginRight_5">
+                  <%= (item.price * ss.basket[item.id]).toLocaleString() %>
+                </p>
+              </div>
+            <% } else { // 個数が0のアイテム %>
+              <p class="hp_font_ss">削除されました。</p>
+            <% } %>
+          </div>
+        </div>
+  <% } %>
+</div>
+  <div class="bl_calcS">
+    <div class="bl_calcS_inner">
+      <div class="bl_calcS_title">
+        <p class="hp_centering">
+          <img src="/images/icons/coin.svg" class="hp_icon_ss hp_marginRight_5">
+          合計
+        </p>
+      </div>
+      <div class="bl_calcS_result">
+        <p>
+          <%= total.toLocaleString('ja-JP') %>
+        </p>
+      </div>
+    </div>
+    <div class="bl_calcS_inner">
+      <div class="bl_calcS_title">
+        <p class="hp_centering">
+          <img src="/images/icons/coin.svg" class="hp_icon_ss hp_marginRight_5">
+          所持金
+        </p>
+      </div>
+      <div class="bl_calcS_result">
+        <p>
+          <%= ss.balance.toLocaleString('ja-JP') %>
+        </p>
+      </div>
+    </div>
+    <div class="bl_calcS_inner">
+      <div class="bl_calcS_title">
+        <p class="hp_centering">
+          <img src="/images/icons/coin.svg" class="hp_icon_ss hp_marginRight_5">
+          購入後
+        </p>
+      </div>
+      <div class="bl_calcS_result">
+        <% if(ss.balance - total < 0) { %>
+          <p class="hp_font_red"><%= (ss.balance - total).toLocaleString('ja-JP') %></p>
+        <% } else { %>
+          <p><%= (ss.balance - total).toLocaleString('ja-JP') %></p>
+          <% } %>
+      </div>
+    </div>
+  </div>
+  <% if(ss.balance - total > 0) { %>
+    <button class="el_btn el_btn_purchase el_btn_bssketS hp_font_s" onclick="payment()">購入を確定する</button>
+  <% } %>
+  <button class="el_btn el_btn_bssketS hp_font_s" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
+<% } %>
+
+
+

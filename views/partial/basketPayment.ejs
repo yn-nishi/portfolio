@@ -1,9 +1,12 @@
-
-
 <p>ありがとうございます。</p>
 <p>購入手続きが完了しました。</p>
-<p><a href="http://localhost:3000/">トップページ</a>の購入済み商品をご確認ください。</p>
-<footer class="modal__footer">
-  <button class="el_btn" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
-  <button class="el_btn el_btn el_btn_purchase" onclick="location.href='http://localhost:3000/'">トップに戻る</button>
+<h3 class="hp_marginTop_10 hp_marginBottom_5">今回ご購入アイテム</h3>
+<% for(let obj of itemsInfo) { %>
+<p class="hp_marginLeft_20">
+・<a href="/item/<%= obj.id %>" class="hp_linkText_simple"><%= obj.title %></a>
+</p>
+<% } %>
+<p class="hp_marginTop_10 hp_font_s">今まで購入した商品はトップページの<a href="/#anchor_purchased" class="hp_linkText_simple">購入済み商品一覧</a>から確認できます。</p>
+<footer class="modal__footer" style="text-align: center;">
+  <button class="el_btn hp_font_s" data-micromodal-close aria-label="Close this dialog window">ショッピングを続ける</button>
 </footer>

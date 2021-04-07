@@ -1,55 +1,68 @@
 
-  <%- include('./partial/header', { ss: ss }) %>
-  <main>
-    <section class="ly_section">
-      <div class="bl_media bl_item">
-        <div class="bl_item_inner" style="align-items: flex-start;">
-          <figure class="bl_item_imgWrapper">
-            <img src="/images/items/<%= item.idStr %>.png" alt="item_image">
-          </figure>
-          <div class="bl_item_text">
-            <h3 class="bl_item_text_title"><%= item.title %></h3>
-            <p class="bl_item_text_reputation hp_centering">
-              <span class="el_fiveStar" id="js_reputation">
-                <%- item.starHtml %>
-              </span>
-              <span id="js_reputation_count">
-                <%= item.rep_count %>個の評価
-              </span>
-            </p>
-            <% if(isPurchased) { %>
+<%- include('./partial/header', { ss }) %>
+<main>
+  <section class="ly_section">
+    <div class="bl_item">
+      <div class="bl_item_inner">
+        <!-- image -->
+        <figure class="bl_item_imgWrapper">
+          <img src="/images/items/<%= item.idStr %>.png">
+        </figure>
+        <!-- base info -->
+        <div class="bl_item_text">
+          <h3 class="bl_item_text_title"><%= item.title %></h3>
+          <p><%= item.type %></p>
+          <p class="bl_item_text_reputation hp_centering">
+            <span class="el_fiveStar" id="js_reputation">
+              <%- item.starHtml %>
+            </span>
+            <span id="js_reputation_count">
+              <%= item.rep_count %>個の評価
+            </span>
+          </p>
+          <% if(isPurchased) { %>
             <p class="bl_item_text_reputation hp_centering">
               <span class="el_fiveStar el_fiveStar_self" id="js_myReputation">
                 <%- item.myStarHtml %>
               </span>
               あなたの評価
             </p>
-            <div class="bl_item_text_content">
-              <h3>ご購入ありがとうございました。</h3>
-              <p><%- item.content %></p>
-            </div>
-            <% } %>
-            <div class="bl_item_text_description">
-              <h3><%= item.type %></h3>
-              <p>ポートフォリを第1作目です。タイ文字をドラッグすると意味と発音を表示します。辞書機能にはタイ語に特化したサイト<a href="https://www.gotthai.net/">ごったい</a>を使用させてもらっています。タイ語を勉強していた頃、こういうのがあればいいなと思ってたので作りました。毎日20人程度の方に利用していただいています。</p>
-              <h3>使用言語等</h3>
-              <p>・JavaScript</p>
-              <h3>デモ画像</h3>
-              <img src="/images/items/01_demo.gif" style="box-shadow: 1px 1px 5px #aaa; width: 500px; height: 250px;">
-              <h3>説明動画</h3>
-              <iframe width="500" height="280" src="https://www.youtube.com/embed/uHAtoQ3XLl8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-          </div>
-          <div class="bl_buyBox">
-            <p class="hp_centering">値段<img src="/images/icons/coin.svg" alt="Nコイン" class="el_coin hp_icon_ss"><%= item.price %></p>
-            <p>在庫あり</p>
-            <% if(isPurchased) { %>
-              <p><%= ss.repository[item.id]%>個 購入済み</p>
-            <% } %>
-            <button class="el_btn el_btn_purchase" onclick="addBasketData('<%= item.idStr %>')">カートに入れる</button>
-          </div>
+          <% } %>
+          <p class="bl_item_price hp_centering">値段<img src="/images/icons/coin.svg" class="el_coin hp_icon_ss hp_marginLeft_5 hp_marginRight_5"><%= item.price %></p>
+          <% if(isPurchased) { %>
+            <p class="bl_item_purchasedCount"><%= ss.repository[item.id]%>個 購入済み</p>
+          <% } %>
+          <button class="el_btn el_btn_item hp_font_s" onclick="addBasketData('<%= item.idStr %>')">カートに入れる</button>
         </div>
       </div>
+      <!-- content -->
+      <% if(isPurchased) { %>
+        <div class="bl_item_text_content hp_shadow">
+          <h3>ご購入ありがとうございました</h3>
+          <%- item.content %>
+        </div>
+      <% } %>
+      <!-- description -->
+      <div class="bl_item_description">
+        <h3>説明</h3>
+        <%- item.description %>
+      </div>
+    </div>
+    <%
+      let pre = '';
+      let next = '';
+      if(item.previous != null) {
+        pre = `<a href="${item.previous.id}" class="hp_linkText">${item.previous.title}</a><img src="/images/icons/chevron_l.svg" class="hp_icon_ss hp_marginRight_5 hp_marginLeft_5">`;
+      }
+      if(item.next != null) {
+        next = `<img src="/images/icons/chevron_r.svg" class="hp_icon_ss hp_marginRight_5 hp_marginLeft_5"><a href="${item.next.id}" class="hp_linkText">${item.next.title}</a>`;
+      }
+    %>
+    <div class="hp_centering hp_marginTop_30 hp_justify_center el_path_footer">
+        <%- pre %>
+        <%= item.title %>
+        <%- next %>
+    </div>
     </section>
   </main>
   <%- include('./partial/footer') %>

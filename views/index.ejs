@@ -5,13 +5,10 @@
     <h2 class="el_h2"><span>ここはなに？</span></h2>
     <div class="bl_mediaUnit bl_mediaUnit2">
       <div class="bl_media bl_media_welcome">
-        <!-- <div class="bl_media_imgWrapper">
-          <img src="/images/statics/greeting.png" alt="welcome_image">
-        </div> -->
         <div class="bl_media_text">
-          <p>ここはなんちゃってショッピングができるポートフォリオサイトです。</p>
-          <p>弾幕チャットをするとお金が増えます。</p>
-          <p>楽しんでいってもらえれば幸いです。</p>
+          <p>なんちゃってショッピングができるポートフォリオサイトです。</p>
+          <p>チャットをするとお金が増えます。</p>
+          <p>少しでも楽しんでいってもらえれば幸いです。</p>
         </div>
       </div>
       <div class="bl_media bl_chatView" id="js_chatView">
@@ -25,65 +22,60 @@
     <h2 class="el_h2">販売品</h2>
     <div class="bl_cardUnit bl_cardUnit3">
       <div class="bl_card">
-        <figure class="bl_card_imgWrapper">
-          <a href="./item/view/app">
-            <img src="/images/statics/app.svg" alt="app">
+        <figure class="bl_card_imgWrapper hp_linkImg_parent">
+          <a href="./item/app">
+            <img src="/images/statics/app.svg" alt="app" class="hp_linkImg">
           </a>
         </figure>
-        <a href="./item/view/app" class="hp_linkText">
+        <a href="./item/app" class="hp_linkText_black">
           <div class="bl_card_title">
-            <img src="/images/icons/app.svg">
-            <h3>作ったものとか</h3>
+            <svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#app"></svg>
+            <h3>作ったもの</h3>
           </div>
         </a>
       </div>
       <div class="bl_card">
-        <figure class="bl_card_imgWrapper">
-          <a href="./item/view/personnel">
-            <img src="/images/statics/personnel.svg" alt="personnel">
+        <figure class="bl_card_imgWrapper hp_linkImg_parent">
+          <a href="./item/personnel">
+            <img src="/images/statics/personnel.svg" alt="personnel" class="hp_linkImg">
           </a>
         </figure>
-        <div class="bl_card_title">
-          <img src="/images/icons/personnel.svg">
-          <h3>個人情報</h3>
-        </div>
+        <a href="./item/personnel" class="hp_linkText_black">
+          <div class="bl_card_title">
+            <svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#personnel"></svg>
+            <h3>個人情報</h3>
+          </div>
+        </a>
       </div>
       <div class="bl_card">
-        <figure class="bl_card_imgWrapper">
-          <a href="./item/view/waste">
-            <img src="/images/statics/waste.svg" alt="waste">
+        <figure class="bl_card_imgWrapper hp_linkImg_parent">
+          <a href="./item/waste">
+            <img src="/images/statics/waste.svg" alt="waste" class="hp_linkImg">
           </a>
         </figure>
-        <div class="bl_card_title">
-          <img src="/images/icons/waste.svg">
-          <h3>無駄遣い</h3>
-        </div>
+        <a href="./item/waste" class="hp_linkText_black">
+          <div class="bl_card_title">
+            <svg class="hp_icon_category"><use xlink:href="/images/icons/category.svg#waste"></svg>
+            <h3>無駄遣い</h3>
+          </div>
+        </a>
       </div>
     </div>
   </section>
-  <section class="ly_section">
+  <section class="ly_section" id="anchor_purchased">
     <h2 class="el_h2">購入済み</h2>
-      <%# 購入済みアイテムを1行あたり5個ずつ表示 %>
-      <div class="bl_cardUnit bl_cardUnit5">
+      <div class="bl_cardUnit bl_purchased">
       <% for(var i = 0; i < items.length; ++i) { %>
-        <% if(i % 5 === 0 && i !== 0) { %>
-          </div>
-          <div class="bl_cardUnit bl_cardUnit5">
-        <% } %>
         <a href="/item/<%= items[i]['id'] %>">
           <div class="bl_card">
-            <figure class="bl_card_imgWrapper">
+            <figure class="bl_card_imgWrapper hp_linkImg_parent">
               <% items[i]['idStr'] = ('00' + items[i]['id']).slice(-2); %>
-              <img src="/images/items/<%= items[i]['idStr'] %>.png">
+              <img src="/images/items/<%= items[i]['idStr'] %>.png" class="hp_linkImg">
             </figure>
-            <h3 class="bl_card_ttl bl_card_ttl__sm"><%=items[i]['title'] %></h3>
+            <h3 class="bl_card_ttl bl_card_ttl__sm hp_linkText_black"><%=items[i]['title'] %></h3>
           </div>
         </a>
         <% } %>
-      <% while(i % 5 !== 0) { %>
-        <div class="bl_card hp_dummyBox"></div>
-        <% ++i %>
-      <% }%>
       <% if(Object.keys(items).length == 0) { %>
         <p>現在、購入済みのアイテムはありません。</p>
       <% } %>

@@ -2,18 +2,17 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// const logger = require('morgan');
+const logger = require('morgan');
 const session = require('express-session');
 const socket_io = require('socket.io');
 const db = require('./lib/db');
 const pgSession = require('connect-pg-simple')(session);
 
+
 // router setup
 const indexRouter = require('./routes/index');
-const templateRouter = require('./routes/template');
 const itemRouter = require('./routes/item');
 const basketRouter = require('./routes/basket');
-const { IncomingMessage } = require('http');
 
 const app = express();
 
@@ -22,25 +21,24 @@ const io = socket_io();
 app.io = io;
 
 // session setup
-const session_opt = {
+const sessionMiddleware = session({
   store: new pgSession({ pgPromise : db, tableName : 'session' }),
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true, 
   cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
-};
-app.use(session(session_opt));
+});
+app.use(sessionMiddleware);
 io.use((socket, next) => {
-  session(session_opt)(socket.request, socket.request.res, next);
+  sessionMiddleware(socket.request, {}, next);
 });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(express.json());
-// app.use(express.text());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -49,7 +47,6 @@ app.use((req, res, next) => {
 });
 app.use('/', indexRouter);
 app.use('/item', itemRouter);
-app.use('/template', templateRouter);
 app.use('/basket', basketRouter);
 app.post('/emit', async (req, res) => {
   emit(req, res);
@@ -68,7 +65,6 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
   res.status(err.status || 500);
   res.render('error');
@@ -77,13 +73,13 @@ app.use(function(err, req, res, next) {
 //-----------------------
 // 関数定義
 //-----------------------
-const common = require('./lib/const.js'); // 共通定数ファイル
+const common = require('./lib/const.js');
 // ユーザーパラメーター設定
 async function initialize(req, res) {
   const ss = req.session;
   // 訪問者の名前を勝手に決める
   if(!ss.name) {
-    ss.name = common.nameAry[Math.floor(Math.random() * common.nameAry.length)] + '(仮)';
+    ss.name = common.nameAry[~~(Math.random() * common.nameAry.length)] + '(仮)';
   }
   // アイコンも勝手に決める
   if(!ss.icon) {
@@ -91,14 +87,14 @@ async function initialize(req, res) {
   }
   // お金
   if(!ss.balance) {
-    ss.balance = 55000;
+    ss.balance = 15000;
   }
   // 買い物かご
   if(!ss.basket) {
     ss.basket = {};
   }
-  // 買い物かごの中に個数が0のアイテムあればkeyごと削除 (買い物かご操作中はスルー)
-  if(Object.values(ss.basket).includes(0) && (req.url !== '/basket/changeQty' || req.url !== '/basket/payment')) {
+  // 買い物かごの中に個数が0のアイテムあればkeyごと削除
+  if(req.url != '/basket/changeQty') {
     for (const key in ss.basket) {
       if(ss.basket[key] === 0) delete ss.basket[key];
     }
@@ -148,7 +144,7 @@ async function emit(req, res) {
   // msgをサイト閲覧者全員に送信
     io.emit("s2c", { msg });
   // お金増やす
-  const income = Math.round(Math.random () * 50000) + 10000;
+  const income = Math.round(Math.random () * 2000) + 500;
   ss.balance += income;
   app.render('./partial/moko', { income }, (err, html) => {
     res.json({ ss, income, html });
@@ -163,13 +159,12 @@ async function chatLoad(req, res) {
   res.render('./partial/chatView', { chatLog, ss })
 }
 
-
 //-----------------------
 // socket
 //-----------------------
 
 // welcome message
-io.on("connection", async socket => {
+io.on("connection", async (socket) => {
   const ss = socket.request.session;
   const count = socket.client.conn.server.clientsCount;
   const date = new Date() ;
@@ -183,19 +178,13 @@ io.on("connection", async socket => {
   if(msg.length > 0) {
     io.emit("s2c", { msg });
     if(count > 1) {
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      io.emit("s2c", { msg: `現在${count}人閲覧中です` });
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      io.emit("s2c", { msg: `現在${count}人接続中です` });
     }
   }
   ss.lastTime = currentTime;
   ss.save();
+  return false;
 });
-
-
-
-
-    // にしbot書き込み
-    // let qr = 'INSERT INTO Chat(sid, chat_icon, chat_name, chat_msg, posted_at) VALUES($1, $2, $3, $4, DEFAULT)';
-    // await db.none(qr, ['yn_nishi', '19', 'にしbot', msg]);
 
 module.exports = app;

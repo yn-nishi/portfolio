@@ -4,8 +4,9 @@ const db = require('../lib/db');
 const common = require('../lib/const.js');
 
 
-router.get ('/', async (req, res) => {
+router.get('/', async (req, res) => {
   const ss = req.session;
+  ss.path = [];
   let items = {};
   let qr = '';
   const itemIds = Object.keys(ss.repository);
@@ -17,5 +18,11 @@ router.get ('/', async (req, res) => {
   const chatLog = await db.any(qr);
   res.render('index', { common, ss, chatLog, items });
 });
+
+router.post('/random', (req, res) => {
+  const comment = common.wisdomAry[~~(Math.random() * common.wisdomAry.length)];
+  res.json({ comment });
+})
+
 
 module.exports = router;
